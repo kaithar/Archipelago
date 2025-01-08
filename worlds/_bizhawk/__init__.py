@@ -170,6 +170,18 @@ async def get_system(ctx: BizHawkContext) -> str:
     return res["value"]
 
 
+async def get_status(ctx: BizHawkContext) -> typing.Tuple[bool, typing.Union[int, None]]:
+    """Gets the emulator status"""
+    res = (await send_requests(ctx, [{"type": "STATUS"}]))[0]
+
+    if res["type"] != "STATUS_RESPONSE":
+        raise SyncError(
+            f"Expected response of type STATUS_RESPONSE but got {res['type']}"
+        )
+
+    return (res["locked"], res["trapped"])
+
+
 async def get_cores(ctx: BizHawkContext) -> typing.Dict[str, str]:
     """Gets the preferred cores for systems with multiple cores. Only systems with multiple available cores have
     entries."""
@@ -204,6 +216,21 @@ async def unlock(ctx: BizHawkContext) -> None:
 
     if res["type"] != "UNLOCKED":
         raise SyncError(f"Expected response of type UNLOCKED but got {res['type']}")
+
+
+async def trap(
+    ctx: BizHawkContext,
+    action: typing.Literal["READ", "WRITE", "EXEC"],
+    address: int,
+    domain: str) -> None:
+    """Registers a trap in BizHawk.
+
+    The same concerns as `LOCK` apply, the minimum time emulation will halt is between the trap firing and a following
+    `UNLOCK` request."""
+    res = (await send_requests(ctx, [{"type": "TRAP", "action": action, "address": address, "domain": domain}]))[0]
+
+    if res["type"] != "TRAPPED":
+        raise SyncError(f"Expected response of type TRAPPED but got {res['type']}")
 
 
 async def display_message(ctx: BizHawkContext, message: str) -> None:

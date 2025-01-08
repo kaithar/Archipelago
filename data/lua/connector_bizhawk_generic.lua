@@ -109,6 +109,11 @@ Response:
 
     Expected Response Type: `SYSTEM_RESPONSE`
 
+- `STATUS`
+    Report the current emulator status, including if it is locked.
+
+    Expected Response Type: `STATUS_RESPONSE`
+
 - `PREFERRED_CORES`  
     Returns the user's default cores for systems with multiple cores. If the
     current ROM's system has multiple cores, the one that is currently
@@ -147,6 +152,19 @@ Response:
     executed.
 
     Expected Response Type: `UNLOCKED`
+
+- `TRAP`
+    Uses the event framework to halt emulation on specified memory access.
+    This mechanism operates similarly to `LOCK` but in the fashion of a
+    mid-frame breakpoint rather than a post-frame request.
+
+    Expected Response Type: `TRAPPED`
+
+    Additional Fields:
+    - `action` (`string`): The trap type, exactly one of `READ`, `WRITE`, `EXEC`
+    - `address` (`int`): The address of the memory to monitor
+    - `domain` (`string`): The name of the memory domain the address
+    corresponds to
 
 - `READ`  
     Reads an array of bytes at the provided address.
@@ -201,6 +219,13 @@ Response:
     Additional Fields:
     - `value` (`string`): The returned system name
 
+- `STATUS_RESPONSE`
+    Provides information on the state of the emulator
+
+    Additional Fields:
+    - `locked` ('boolean'): true if `LOCK` or `TRAP` has paused emulation.
+    - `trapped` ('int'): address if `TRAP` has been triggered, otherwise nil
+
 - `PREFERRED_CORES_RESPONSE`  
     Contains the user's preferred cores for systems with multiple supported
     cores. Currently includes NES, SNES, GB, GBC, DGB, SGB, PCE, PCECD, and
@@ -230,6 +255,9 @@ Response:
 
 - `UNLOCKED`  
     Acknowledges `UNLOCK`.
+
+- `TRAPPED`  
+    Acknowledges `TRAP`.
 
 - `READ_RESPONSE`  
     Contains the result of a `READ` request.
@@ -294,6 +322,7 @@ local prev_time = 0
 local current_time = 0
 
 local locked = false
+local trapped = nil
 
 local rom_hash = nil
 
@@ -327,7 +356,16 @@ end
 
 function unlock ()
     locked = false
+    trapped = nil
     client_socket:settimeout(0)
+end
+
+function trapper (addr, val, flags)
+    -- There's some neat stuff we could do here, but simple first
+    --lock()
+    trapped = addr
+    print("Trapped! "..addr)
+    --unlock()
 end
 
 request_handlers = {
@@ -344,6 +382,16 @@ request_handlers = {
 
         res["type"] = "SYSTEM_RESPONSE"
         res["value"] = emu.getsystemid()
+
+        return res
+    end,
+
+    ["STATUS"] = function (req)
+        local res = {}
+
+        res["type"] = "STATUS_RESPONSE"
+        res["locked"] = locked
+        res["trapped"] = trapped
 
         return res
     end,
@@ -410,6 +458,26 @@ request_handlers = {
 
         res["type"] = "UNLOCKED"
         unlock()
+
+        return res
+    end,
+
+    ["TRAP"] = function (req)
+        local res = {}
+
+        if req["action"] == "READ" then
+            event.on_bus_read(trapper, req["address"], nil, req["domain"])
+        elseif req["action"] == "WRITE" then
+            event.on_bus_write(trapper, req["address"], nil, req["domain"])
+        elseif req["action"] == "EXEC" then
+            event.on_bus_exec(trapper, req["address"], nil, req["domain"])
+        else
+            res["type"] = "ERROR"
+            res["err"] = "Unknown action: "..req["action"]
+            return res
+        end
+
+        res["type"] = "TRAPPED"
 
         return res
     end,

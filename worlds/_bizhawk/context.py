@@ -113,6 +113,7 @@ async def _game_watcher(ctx: BizHawkClientContext):
     showed_connecting_message = False
     showed_connected_message = False
     showed_no_handler_message = False
+    called_on_connect = False
 
     while not ctx.exit_event.is_set():
         try:
@@ -125,6 +126,7 @@ async def _game_watcher(ctx: BizHawkClientContext):
         try:
             if ctx.bizhawk_ctx.connection_status == ConnectionStatus.NOT_CONNECTED:
                 showed_connected_message = False
+                called_on_connect = False
 
                 if not showed_connecting_message:
                     logger.info("Waiting to connect to BizHawk...")
@@ -184,6 +186,10 @@ async def _game_watcher(ctx: BizHawkClientContext):
                 else:
                     showed_no_handler_message = False
                     logger.info(f"Running handler for {ctx.client_handler.game}")
+
+            if not called_on_connect:
+                called_on_connect = True
+                await ctx.client_handler.on_connect(ctx)
 
         except RequestFailedError as exc:
             logger.info(f"Lost connection to BizHawk: {exc.args[0]}")

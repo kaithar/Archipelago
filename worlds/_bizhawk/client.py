@@ -101,3 +101,8 @@ class BizHawkClient(abc.ABC, metaclass=AutoBizHawkClientRegister):
     def on_package(self, ctx: BizHawkClientContext, cmd: str, args: dict) -> None:
         """For handling packages from the server. Called from `BizHawkClientContext.on_package`."""
         pass
+
+    def on_connect(self, ctx: BizHawkClientContext) -> None:
+        """This gets called after the loop has validated the rom but before the first call to `game_watcher`.
+        Use it to perform initial sync tasks"""
+        pass
