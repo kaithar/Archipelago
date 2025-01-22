@@ -1,3 +1,5 @@
+import os
+import pkgutil
 from typing import ClassVar, List
 
 from worlds.AutoWorld import World
@@ -89,3 +91,10 @@ class Sonic1World(World):
                 return False
           return True
        self.multiworld.completion_condition[self.player] = lambda state: completion_check(state)
+
+    def generate_output(self, output_directory: str) -> None:
+        patch = configurable.Sonic1ProcedurePatch(player=self.player, player_name=self.player_name)
+        patch.write_file("sonic1-ap.bsdiff4", pkgutil.get_data(__name__, "sonic1-ap.bsdiff4"))
+        out_file_name = self.multiworld.get_out_file_name_base(self.player)
+        patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
+
