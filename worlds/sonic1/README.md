@@ -3,11 +3,14 @@
 ## What you need to know about the Archipelago mode
 
 - The location checks for this game are every monitor, all six bosses and all six special zones.
-- This world will add to the item pool 6 emeralds, 2 buff items (more on those in a moment), and 209 rings.
-- The 209 rings are split into 10 classed as Useful and 199 classed as Filler, the hope is that this will balance the distribution.
+- This world will add to the item pool 6 emeralds, 14 keys, 2 buff items (more on those in a moment), and 195 rings.
+- There are 6 keys for the normal zones, 1 for the Final Zone, 1 for Specials access, and 6 for the special stages themselves.
+- The player will start with the Specials access key and one random normal zone key unlocked, the remaining 12 are in the pool.
+- The 195 rings are split into 10 classed as Useful and 185 classed as Filler, the hope is that this will balance the distribution.
 - To complete the world you need to complete the 6 specials, 6 bosses, get the 6 emeralds in the pool, and 100 of the pool rings.
 - Initially there are no options, the number of rings to complete may get added as a difficulty modifier.
 - At 100 rings, in my tests using Pokemon red as a second world, you should be able to get enough rings by 100% clearing.
+- Keys can only appear in other worlds, to make filling slightly saner.
 
 ## What changes to Sonic 1 you need to know about
 
@@ -16,13 +19,16 @@
 - Special stages will play in order, you won't move on to the next until you pass one.
 - If you take damage and when you enter a level the mod will treat your AP received Ring count as your minimum instead of 0.
 - With the AP ring gift, you can survive any damage that would make you drop rings, like you immediately pick up additional rings.
-- To save rom space, Sonic hurt from an enemy will drop 32 rings are reset to the AP count as long as you have at least 1 ring.
+- To save rom space, Sonic hurt from an enemy will drop 6 rings and reset to the AP count as long as you have at least 1 ring.
 - You are not immune to instant deaths like squishing, time out and drowning.
 - Spikes floors are potentially more dangerous, they can lock you into a bounce loop instead of killing you.
 - Pause a level and press C to exit back to level select.
 - A basic spin dash has been added to make life a little less miserable.
 - You don't lose lives when dying, since it makes no sense in this context.
 - Repeating a boss doesn't give you extra rewards.
+- You don't gain extra lives for 100 rings, but you can't lose lives either.
+- Completing a stage with 50 rings won't spawn a giant ring due to progression gating.
+- You start with a random zone unlocked, further zone unlocks are via keys in other players' pools
 - Special stage buffs:  The UP block is disabled, no speeding up.  Goal and R blocks can be disabled using the two buff items in the pool.
 - ReadySonic's "Roll into Catakiller" fix has been included, so you can kill them by rolling into them.
 - ReadySonic's "High speed camera fix" has also been included to hopefully make things a little safer.

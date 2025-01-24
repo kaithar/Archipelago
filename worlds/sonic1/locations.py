@@ -4,6 +4,12 @@ from . import constants
 
 # Zoom in... Zoom zoom
 
+class S1HubRegion(Region):
+    game = "Sonic the Hedgehog 1"
+
+class S1HubEntrance(Entrance):
+    pass
+
 class S1Region(Region):
     game = "Sonic the Hedgehog 1"
     monitors: typing.Dict

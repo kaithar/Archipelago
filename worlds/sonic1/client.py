@@ -20,7 +20,7 @@ class S1Client(BizHawkClient):
     async def validate_rom(self, ctx):
         # loaded_hash = await get_hash(ctx.bizhawk_ctx)
         print(ctx.rom_hash)
-        if ctx.rom_hash == "3D4F05B778173325CD236AD2215B058786C7D5E5": # Patched against known `Sonic The Hedgehog (W) (REV00)`
+        if ctx.rom_hash == "0B02CA9FE8F5EA1067EC491465BD8FA22DB0D74E": # Patched against known `Sonic The Hedgehog (W) (REV00)`
             ctx.game = self.game
             ctx.items_handling = 0b111
             return True
@@ -39,7 +39,7 @@ class S1Client(BizHawkClient):
         super().on_package(ctx, cmd, args)
 
     async def game_watcher(self, ctx):
-        data = await read(ctx.bizhawk_ctx, [(0x0, 0x1AD+40, "SRAM"),])
+        data = await read(ctx.bizhawk_ctx, [(0x0, 0x1B2+40, "SRAM"),])
         # Because of the stupidity of how sram works, we're going to unpack this by dropping every other byte.
         # So:
         clean_data = [data[0][i] for i in range(0,len(data[0]), 2)]
@@ -63,7 +63,7 @@ class S1Client(BizHawkClient):
                 output = [65, 83, 49, 48]
                 for i in range(1,len(constants.monitor_by_id)+1):
                     output.append(MAGIC_BROKEN if constants.id_base+i in ctx.locations_checked else MAGIC_UNBROKEN)
-                output.extend([0x0,0x0,0x0,0x0,0x0,0x0])
+                output.extend([0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0])
                 output.extend([ord(c) for c in ctx.remote_seed_name])
                 wrdata = []
                 for b in output:
@@ -78,6 +78,8 @@ class S1Client(BizHawkClient):
                 move.w #0,(a0)+ ; Buff: Disable goal blocks. 0x00 (off), 0x01 (on)
                 move.w #0,(a0)+ ; Buff: Disable R. 0x00 (off), 0x01 (on)
                 move.w #0,(a0)+ ; Number of rings found.
+                move.w #0,(a0)+ ; Level gate bitmask.
+                move.w #0,(a0)+ ; Specials gate bitmask.
                 '''
 
             if seed_name == ctx.remote_seed_name:
@@ -86,7 +88,7 @@ class S1Client(BizHawkClient):
                     broken = (clean_data[3+i] == MAGIC_BROKEN)
                     checked = constants.id_base+i in ctx.locations_checked
                     if broken != checked:
-                        logger.info(f"{constants.monitor_by_idx[i]} {broken} != {checked}")
+                        #logger.info(f"{constants.monitor_by_idx[i]} {broken} != {checked}")
                         ctx.locations_checked.add(constants.id_base+i) # Do I need to do this?
                         dirty = True
                 
@@ -113,6 +115,8 @@ class S1Client(BizHawkClient):
                 ringcount = 0
                 emeraldsset = 0
                 buffs = [0,0]
+                levelkeys = 0
+                sskeys = 0
                 for it in ctx.items_received:
                     idx = it.item - constants.id_base
                     #logger.info(["Emerald 1", "Emerald 2", "Emerald 3", "Emerald 4", "Emerald 5", "Emerald 6", "Disable GOAL blocks", "Disable R blocks"][idx-1])
@@ -122,6 +126,10 @@ class S1Client(BizHawkClient):
                         buffs[0] = 1
                     elif idx == 8:
                         buffs[1] = 1
+                    elif idx in range(9,17):
+                        levelkeys |= [1,2,4,8,16,32,64,128][idx-9]
+                    elif idx in range(17,23):
+                        sskeys |= [1,2,4,8,16,32,64,128][idx-17]
                     else:
                         ringcount += 1
                 
@@ -133,6 +141,10 @@ class S1Client(BizHawkClient):
                     await write(ctx.bizhawk_ctx, [((basis+4)*2, [buffs[1]], "SRAM")])
                 if clean_data[basis+5] != ringcount:
                     await write(ctx.bizhawk_ctx, [((basis+5)*2, [ringcount], "SRAM")])
+                if clean_data[basis+6] != levelkeys:
+                    await write(ctx.bizhawk_ctx, [((basis+6)*2, [levelkeys], "SRAM")])
+                if clean_data[basis+7] != levelkeys:
+                    await write(ctx.bizhawk_ctx, [((basis+7)*2, [sskeys], "SRAM")])
                 
                 if dirty:
                     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": list(ctx.locations_checked)}]) # Or this?

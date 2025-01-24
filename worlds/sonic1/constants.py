@@ -78,12 +78,12 @@ for b in bosses:
     location_name_to_id[_b.name] = _b.id
 
 specials = [
-    ["Special Zone 1", 1, 221],
-    ["Special Zone 2", 2, 222],
-    ["Special Zone 3", 3, 223],
-    ["Special Zone 4", 4, 224],
-    ["Special Zone 5", 5, 225],
-    ["Special Zone 6", 6, 226],
+    ["Special Stage 1", 1, 221],
+    ["Special Stage 2", 2, 222],
+    ["Special Stage 3", 3, 223],
+    ["Special Stage 4", 4, 224],
+    ["Special Stage 5", 5, 225],
+    ["Special Stage 6", 6, 226],
 ]
 
 _special = namedtuple('Special', ['name', 'idx', 'id'])
@@ -107,20 +107,41 @@ items = [
     ["Emerald 5",           5, ItemClassification.progression],
     ["Emerald 6",           6, ItemClassification.progression],
     ["Disable GOAL blocks", 7, ItemClassification.useful],
-    ["Disable R blocks",    8, ItemClassification.useful]
+    ["Disable R blocks",    8, ItemClassification.useful],
+    ["Green Hill Key",      9, ItemClassification.progression],
+    ["Marble Zone Key",    10, ItemClassification.progression],
+    ["Spring Yard Key",    11, ItemClassification.progression],
+    ["Labyrinth Key",      12, ItemClassification.progression],
+    ["Starlight Key",      13, ItemClassification.progression],
+    ["Scrap Brain Key",    14, ItemClassification.progression],
+    ["Final Zone Key",     15, ItemClassification.progression],
+    ["Special Stages Key", 16, ItemClassification.progression], # Dummy key
+    ["Special Stage 1 Key",17, ItemClassification.progression],
+    ["Special Stage 2 Key",18, ItemClassification.progression],
+    ["Special Stage 3 Key",19, ItemClassification.progression],
+    ["Special Stage 4 Key",20, ItemClassification.progression],
+    ["Special Stage 5 Key",21, ItemClassification.progression],
+    ["Special Stage 6 Key",22, ItemClassification.progression]
 ]
 
-# Specials and Emeralds cancel out. 205 monitors+6 bosses vs 2 buffs, 209 rings needed
+possible_starters = [ "Green Hill Key", "Marble Zone Key", "Spring Yard Key", "Labyrinth Key", "Starlight Key", "Scrap Brain Key"]
+
+# Specials and Emeralds cancel out. 205 monitors+6 bosses vs 2 buffs+8 zones+6 specials, 195 rings needed
+# Except... the dummy key and one of the 6 proper zone keys are prefilled, so we need an extra 2 rings
 # For reasons of sanity, 10 are considered "useful" and the rest are "filler"
 # In theory that means some will definitely show up but won't flood the useful spots.
-items.extend([[f"Ring {i}", 8+i, ItemClassification.useful] for i in range(1,11)])
-items.extend([[f"Ring {i}", 8+i, ItemClassification.filler] for i in range(11,210)])
+items.extend([[f"Ring {i}", 22+i, ItemClassification.useful] for i in range(1,11)])
+items.extend([[f"Ring {i}", 22+i, ItemClassification.filler] for i in range(11,198)])
 
 _item = namedtuple('Item', ['name', 'idx','id','itemclass'])
 item_name_to_id: Dict[str, int] = {}
 item_by_id: Dict[int,_item] = {}
 item_by_idx: Dict[int,_item] = {}
 item_by_name: Dict[str,_item] = {}
+
+item_name_groups: Dict[str,set[str]] = {
+    "keys": {item[0] for item in items if "Key" in item[0]}
+}
 
 for item in items:
     _i = _item(item[0],item[1],item[1]+id_base,item[2])
@@ -137,10 +158,10 @@ completion = [
     'Labyrinth 3 Boss',
     'Starlight 3 Boss',
     'Final Zone Boss',
-    'Special Zone 1',
-    'Special Zone 2',
-    'Special Zone 3',
-    'Special Zone 4',
-    'Special Zone 5',
-    'Special Zone 6',
+    'Special Stage 1',
+    'Special Stage 2',
+    'Special Stage 3',
+    'Special Stage 4',
+    'Special Stage 5',
+    'Special Stage 6',
 ]
