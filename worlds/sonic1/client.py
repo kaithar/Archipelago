@@ -23,6 +23,8 @@ class S1Client(BizHawkClient):
         if ctx.rom_hash == "0B02CA9FE8F5EA1067EC491465BD8FA22DB0D74E": # Patched against known `Sonic The Hedgehog (W) (REV00)`
             ctx.game = self.game
             ctx.items_handling = 0b111
+            ctx.remote_seed_name = MAGIC_EMPTY_SEED
+            ctx.rom_seed_name = MAGIC_EMPTY_SEED
             return True
         return False
 
@@ -47,13 +49,8 @@ class S1Client(BizHawkClient):
         #logger.info(f"Data... {clean_data=} ({len(clean_data)=}) {seed_name=} {len(seed_name)=}")
         # We're only caring about the seed in the start.
         ctx.rom_seed_name = seed_name
-        if seed_name == MAGIC_EMPTY_SEED:
-            # This is when it isn't set.
-            pass
-        else:
-            ctx.rom_seed_name
 
-        if not ctx.server or not ctx.server.socket.open or ctx.server.socket.closed:
+        if not ctx.server or not ctx.server.socket.open or ctx.server.socket.closed or ctx.remote_seed_name == MAGIC_EMPTY_SEED:
             return
 
         if clean_data[0:4] == [65, 83, 49, 48]: # AS10
@@ -69,6 +66,8 @@ class S1Client(BizHawkClient):
                 for b in output:
                     wrdata.extend([b,0x0])
                 await write(ctx.bizhawk_ctx, [(0, wrdata, "SRAM")])
+                seed_name = ctx.remote_seed_name
+                ctx.rom_seed_name = seed_name
 
                 '''
                 move.w #0,(a0)+ ; Special zone bitfield
