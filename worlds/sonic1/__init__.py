@@ -20,7 +20,7 @@ class Sonic1World(World):
     location_name_to_id = constants.location_name_to_id
 
     settings_key = "sonic1_settings"
-    settings = ClassVar[configurable.Sonic1Settings]
+    settings: ClassVar[configurable.Sonic1Settings]
 
     def create_item(self, name: str) -> Item:
         item = constants.item_by_name[name]

@@ -38,8 +38,8 @@ class Sonic1Settings(settings.Group):
         """File name of your Sonic 1 (JUE/W) Rev0 ROM (also called "Sonic The Hedgehog (USA, Europe)") """
         required = True
         description = "Sonic 1 English Rev0 ROM File"
-        copy_to = "Sonic 1 (W).md"
+        copy_to = "Sonic The Hedgehog (USA, Europe).md"
         md5s = [Sonic1ProcedurePatch.hash]
 
-    rom_file: Sonic1RomFile = Sonic1RomFile("Sonic The Hedgehog (USA, Europe).md")
+    rom_file: Sonic1RomFile = Sonic1RomFile(Sonic1RomFile.copy_to)
 
