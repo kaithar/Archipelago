@@ -14,7 +14,7 @@ MAGIC_EMPTY_SEED = ' '*20
 
 class S1Client(BizHawkClient):
     system = ("GEN",)
-    patch_suffix = (".bsdiff4",)
+    patch_suffix = (".aps1",)
     game = "Sonic the Hedgehog 1"
 
     async def validate_rom(self, ctx):

@@ -16,7 +16,7 @@ from worlds.Files import APProcedurePatch
 class Sonic1ProcedurePatch(APProcedurePatch):
     game = "Sonic the Hedgehog 1"
     hash = "1bc674be034e43c96b86487ac69d9293"
-    patch_file_ending = ".bsdiff4"
+    patch_file_ending = ".aps1"
     result_file_ending = ".md"
 
     procedure = [
