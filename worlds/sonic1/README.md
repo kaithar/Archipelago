@@ -11,6 +11,7 @@
 - Initially there are no options, the number of rings to complete may get added as a difficulty modifier.
 - At 100 rings, in my tests using Pokemon red as a second world, you should be able to get enough rings by 100% clearing.
 - Keys can only appear in other worlds, to make filling slightly saner.
+- Universal Tracker is supported.
 
 ## What changes to Sonic 1 you need to know about
 
@@ -28,7 +29,9 @@
 - Repeating a boss doesn't give you extra rewards.
 - You don't gain extra lives for 100 rings, but you can't lose lives either.
 - Completing a stage with 50 rings won't spawn a giant ring due to progression gating.
+- Completing acts 2 or 3 of Scrap Brain won't advance you to the next zone.
 - You start with a random zone unlocked, further zone unlocks are via keys in other players' pools
+- The 50 ring secret upper path on SBZ2 is disabled as there are no checks up there.
 - Special stage buffs:  The UP block is disabled, no speeding up.  Goal and R blocks can be disabled using the two buff items in the pool.
 - ReadySonic's "Roll into Catakiller" fix has been included, so you can kill them by rolling into them.
 - ReadySonic's "High speed camera fix" has also been included to hopefully make things a little safer.
@@ -45,8 +48,5 @@
 
 ## TODO/Missing features
 
-- I'll be adding UT maps to make it easier to track down missing monitors.
-- Monitors may get renamed to better reflect their location if feedback suggests it is necessary.
 - The code will probably need a little cleanup.
-- I'll probably abstract the MD/Genesis SRAM code since the byte weirdness is pretty consistent for any game using that ram.
 - Worth adding item received messages via BizHawk Client's message feature?  Feedback welcome on that
