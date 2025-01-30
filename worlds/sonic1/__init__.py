@@ -2,12 +2,16 @@ import os
 import pkgutil
 from typing import ClassVar, List
 
+import BaseClasses
 from worlds.AutoWorld import World
 from worlds.generic.Rules import add_rule, set_rule, forbid_item, add_item_rule
 
 from BaseClasses import CollectionState, Entrance, Item, Region
 
 from . import constants, configurable, client, locations  # noqa: F401
+
+def map_key_index(idx):
+    return int(idx or 0)
 
 class Sonic1World(World):
     """
@@ -22,14 +26,22 @@ class Sonic1World(World):
     settings_key = "sonic1_settings"
     settings: ClassVar[configurable.Sonic1Settings]
 
+    tracker_world = {
+        "map_page_folder": "tracker",
+        "map_page_maps": "maps/maps.json",
+        "map_page_locations": "locations/locations.json",
+        "map_page_setting_key": "sonic1_area",
+        "map_page_index": map_key_index,
+    }
+
     def create_item(self, name: str) -> Item:
         item = constants.item_by_name[name]
-        return locations.S1Item(name, item.itemclass, item.id, self.player)
+        return locations.S1Item(name, getattr(BaseClasses.ItemClassification,item.itemclass), item.id, self.player)
 
     def create_items(self) -> None:
         exclude = ["Special Stages Key", self.random.choice(constants.possible_starters)]
         for item in constants.item_by_idx.values():
-            oi = locations.S1Item(item.name, item.itemclass, item.id, self.player)
+            oi = locations.S1Item(item.name, getattr(BaseClasses.ItemClassification,item.itemclass), item.id, self.player)
             if item.name in exclude:
                 self.multiworld.push_precollected(oi)
                 exclude.remove(item.name)
@@ -114,7 +126,7 @@ class Sonic1World(World):
             for c in constants.completion:
                 if not state.can_reach_location(c, self.player):
                     return False
-            for c in ['Emerald 1','Emerald 2','Emerald 3','Emerald 4','Emerald 5','Emerald 6']:
+            for c in constants.emeralds:
                 if not state.has(c,self.player):
                     return False
             return True

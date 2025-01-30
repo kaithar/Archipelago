@@ -1,4 +1,6 @@
 import logging
+import struct
+import typing
 
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
@@ -12,6 +14,99 @@ MAGIC_BROKEN = 0x0
 MAGIC_UNBROKEN = 0x1F
 MAGIC_EMPTY_SEED = ' '*20
 
+class SegaSRAM(object):
+    _raw: typing.List[bytes]
+    clean_data: bytes
+    byte_count: int
+    ram_type = 0
+    format: str = ""
+    fields = ()
+    staged: typing.List[typing.Tuple]
+    extra_addresses: typing.List[typing.Tuple[int,int,str]]
+    extra_data: typing.List[bytes]
+
+    def __init__(self, format, ram_type=0):
+        '''Ram_type 0 for even addresses, 1 for odd addresses, 2 for both'''
+        self._raw = []
+        self.set_format(format)
+        self.ram_type = ram_type
+        self.staged = []
+        self.extra_addresses = []
+        self.extra_data = []
+    
+    def set_format(self, format: str):
+        self.format = format
+        self.byte_count = struct.calcsize(format)*(1 if self.ram_type == 2 else 2)
+        if self.byte_count%2 != 0: # Memory is 16 bit aligned.
+            self.byte_count += 1
+
+    async def read_bytes(self, ctx, clear_stage=True):
+        if clear_stage:
+            self.staged = []
+        data = await read(ctx.bizhawk_ctx, [(0x0, self.byte_count, "SRAM"),]+self.extra_addresses)
+        self._raw = data[0]
+        self.extra_data = data[1:]
+        # Because of 8bit sram stupidity, we're probably going to need to unpack this by dropping every other byte.
+        # So:
+        if self.ram_type == 0:
+          self.clean_data = bytes([data[0][i] for i in range(0,len(data[0]), 2)])
+        elif self.ram_type == 1:
+          self.clean_data = bytes([data[0][i] for i in range(1,len(data[0]), 2)])
+        else:
+          self.clean_data = data[0]
+        self.fields = struct.unpack(self.format,self.clean_data)
+        #seed_name = ''.join([chr(c) for c in clean_data[-20:]])
+        #logger.info(f"Data... {clean_data=} ({len(clean_data)=}) {seed_name=} {len(seed_name)=}")
+        # We're only caring about the seed in the start.
+    
+    async def full_write(self, ctx, data, clear_stage=True):
+        if clear_stage:
+            self.staged = []
+        self.fields = tuple(data)
+        self.clean_data = struct.pack(self.format, *data)
+        wrdata = []
+        if self.ram_type == 0:
+            for b in self.clean_data:
+                wrdata.extend([b,0x0])
+        elif self.ram_type == 1:
+            for b in self.clean_data:
+                wrdata.extend([0x0,b])
+        else:
+          wrdata = data
+        self._raw = bytes(wrdata)
+        await write(ctx.bizhawk_ctx, [(0, wrdata, "SRAM")])
+    
+    def stage(self, offset, data):
+        for i in range(0,len(data)):
+            if self.fields[offset+i] != data[i]:
+                self.staged.append((offset+i, data[i]))
+    
+    async def commit(self, ctx):
+        if len(self.staged) > 0:
+          out = list(self.fields)
+          while len(self.staged):
+              u = self.staged.pop(0)
+              out[u[0]] = u[1]
+          self.fields = tuple(out)
+          self.clean_data = struct.pack(self.format, *out)
+          wrdata = []
+          if self.ram_type == 0:
+              for b in self.clean_data:
+                  wrdata.extend([b,0x0])
+          elif self.ram_type == 1:
+              for b in self.clean_data:
+                  wrdata.extend([0x0,b])
+          else:
+            wrdata = self.clean_data
+          tempraw = bytes(wrdata)
+          patches = []
+          for i,bs in enumerate(zip(self._raw, tempraw)):
+              if bs[0] != bs[1]:
+                  logger.info(f"{i=} {bs=}")
+                  patches.append([i,[bs[1]], "SRAM"])
+          self._raw = tempraw
+          await write(ctx.bizhawk_ctx,patches)
+
 class S1Client(BizHawkClient):
     system = ("GEN",)
     patch_suffix = (".aps1",)
@@ -20,11 +115,15 @@ class S1Client(BizHawkClient):
     async def validate_rom(self, ctx):
         # loaded_hash = await get_hash(ctx.bizhawk_ctx)
         print(ctx.rom_hash)
-        if ctx.rom_hash == "0B02CA9FE8F5EA1067EC491465BD8FA22DB0D74E": # Patched against known `Sonic The Hedgehog (W) (REV00)`
+        if ctx.rom_hash == "3ED80290E4197EEDCD981FD402F94F794F724A8E": # Patched against known `Sonic The Hedgehog (W) (REV00)`
             ctx.game = self.game
             ctx.items_handling = 0b111
             ctx.remote_seed_name = MAGIC_EMPTY_SEED
             ctx.rom_seed_name = MAGIC_EMPTY_SEED
+            ctx.sram_abstraction = SegaSRAM(">4s196BBBBBBBBB20s")
+            ctx.sram_abstraction.extra_addresses.append((0x0F600, 1, "68K RAM")) # Game mode
+            ctx.sram_abstraction.extra_addresses.append((0x0FE10, 7, "68K RAM")) # Zone and Act... v_lastspecial is 0xFE16
+            ctx.curr_map = None
             return True
         return False
 
@@ -37,35 +136,50 @@ class S1Client(BizHawkClient):
                 self.game_state = False
                 self.disconnect_pending = True
         #if cmd != "PrintJSON":
-            #logger.info(f"{cmd=} -> {args=}")
+        #    logger.info(f"{cmd=} -> {args=}")
         super().on_package(ctx, cmd, args)
 
     async def game_watcher(self, ctx):
-        data = await read(ctx.bizhawk_ctx, [(0x0, 0x1B2+40, "SRAM"),])
-        # Because of the stupidity of how sram works, we're going to unpack this by dropping every other byte.
-        # So:
-        clean_data = [data[0][i] for i in range(0,len(data[0]), 2)]
-        seed_name = ''.join([chr(c) for c in clean_data[-20:]])
+        assert isinstance(ctx.sram_abstraction, SegaSRAM)
+        await ctx.sram_abstraction.read_bytes(ctx)
+        seed_name = str(ctx.sram_abstraction.fields[-1],'ascii')
         #logger.info(f"Data... {clean_data=} ({len(clean_data)=}) {seed_name=} {len(seed_name)=}")
         # We're only caring about the seed in the start.
         ctx.rom_seed_name = seed_name
 
         if not ctx.server or not ctx.server.socket.open or ctx.server.socket.closed or ctx.remote_seed_name == MAGIC_EMPTY_SEED:
             return
+      
+        if ctx.sram_abstraction.extra_data[0] == b"\x0C": # Level mode
+            map_code = constants.level_bytes.get(ctx.sram_abstraction.extra_data[1][:2],0)
+        elif ctx.sram_abstraction.extra_data[0] == b"\x10": # Special zone
+            map_code = int(ctx.sram_abstraction.extra_data[1][6])+19
+        else:
+            map_code = 0
+        
+        if ctx.curr_map != map_code:
+            ctx.curr_map = map_code
+            await ctx.send_msgs([{
+                "cmd": "Set",
+                "key": f"{ctx.slot}_{ctx.team}_sonic1_area",
+                "default": 0,
+                "want_reply": True,
+                "operations": [{
+                    "operation": "replace",
+                    "value": map_code,
+                }],
+            }])
 
-        if clean_data[0:4] == [65, 83, 49, 48]: # AS10
+        if ctx.sram_abstraction.fields[0] == b'AS10':
             # So, this should be valid save data...
             if seed_name == MAGIC_EMPTY_SEED:
                 # Only, there's a blank save, so we should write the full save.
-                output = [65, 83, 49, 48]
-                for i in range(1,len(constants.monitor_by_id)+1):
-                    output.append(MAGIC_BROKEN if constants.id_base+i in ctx.locations_checked else MAGIC_UNBROKEN)
+                output = [b'AS10']
+                output += bytes([MAGIC_BROKEN if constants.id_base+i in ctx.locations_checked else MAGIC_UNBROKEN 
+                                 for i in range(1,len(constants.monitor_by_id)+1)])
                 output.extend([0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0])
-                output.extend([ord(c) for c in ctx.remote_seed_name])
-                wrdata = []
-                for b in output:
-                    wrdata.extend([b,0x0])
-                await write(ctx.bizhawk_ctx, [(0, wrdata, "SRAM")])
+                output.append(ctx.remote_seed_name.encode())
+                await ctx.sram_abstraction.full_write(ctx, output)
                 seed_name = ctx.remote_seed_name
                 ctx.rom_seed_name = seed_name
 
@@ -84,25 +198,25 @@ class S1Client(BizHawkClient):
             if seed_name == ctx.remote_seed_name:
                 dirty = False
                 for i in range(1,len(constants.monitor_by_id)+1):
-                    broken = (clean_data[3+i] == MAGIC_BROKEN)
+                    broken = (ctx.sram_abstraction.fields[i] == MAGIC_BROKEN)
                     checked = constants.id_base+i in ctx.locations_checked
                     if broken != checked:
                         #logger.info(f"{constants.monitor_by_idx[i]} {broken} != {checked}")
                         ctx.locations_checked.add(constants.id_base+i) # Do I need to do this?
                         dirty = True
                 
-                basis = 4+len(constants.monitor_by_id)
+                basis = 1+len(constants.monitor_by_id)
 
-                specials = clean_data[basis]
+                specials = ctx.sram_abstraction.fields[basis]
                 for bit, idx in [[1,221], [2,222], [4,223], [8,224], [16,225], [32,226]]:
                     if specials&bit != 0 and constants.id_base+idx not in ctx.locations_checked:
                         ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
                         dirty = True
 
-                emeralds = clean_data[basis+1]
+                emeralds = ctx.sram_abstraction.fields[basis+1]
 
                 # GH3, MZ3, SY3, LZ3, SL3, FZ
-                bosses = clean_data[basis+2]
+                bosses = ctx.sram_abstraction.fields[basis+2]
                 for bit, idx in [[1,211], [2,212], [4,213], [8,214], [16,215], [32,216]]:
                     if bosses&bit != 0 and constants.id_base+idx not in ctx.locations_checked:
                         ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
@@ -132,18 +246,9 @@ class S1Client(BizHawkClient):
                     else:
                         ringcount += 1
                 
-                if emeralds != emeraldsset:
-                    await write(ctx.bizhawk_ctx, [((basis+1)*2, [emeraldsset], "SRAM")])
-                if clean_data[basis+3] != buffs[0]:
-                    await write(ctx.bizhawk_ctx, [((basis+3)*2, [buffs[0]], "SRAM")])
-                if clean_data[basis+4] != buffs[1]:
-                    await write(ctx.bizhawk_ctx, [((basis+4)*2, [buffs[1]], "SRAM")])
-                if clean_data[basis+5] != ringcount:
-                    await write(ctx.bizhawk_ctx, [((basis+5)*2, [ringcount], "SRAM")])
-                if clean_data[basis+6] != levelkeys:
-                    await write(ctx.bizhawk_ctx, [((basis+6)*2, [levelkeys], "SRAM")])
-                if clean_data[basis+7] != levelkeys:
-                    await write(ctx.bizhawk_ctx, [((basis+7)*2, [sskeys], "SRAM")])
+                ctx.sram_abstraction.stage(basis+1, [emeraldsset])
+                ctx.sram_abstraction.stage(basis+3, [buffs[0], buffs[1], ringcount, levelkeys, sskeys])
+                await ctx.sram_abstraction.commit(ctx)
                 
                 if dirty:
                     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": list(ctx.locations_checked)}]) # Or this?
