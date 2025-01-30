@@ -142,6 +142,8 @@ class S1Client(BizHawkClient):
     async def game_watcher(self, ctx):
         assert isinstance(ctx.sram_abstraction, SegaSRAM)
         await ctx.sram_abstraction.read_bytes(ctx)
+        if ctx.sram_abstraction.fields[0] != b'AS10' or b'\xff' in ctx.sram_abstraction.fields[-1]:
+            return # This means we're not initialised
         seed_name = str(ctx.sram_abstraction.fields[-1],'ascii')
         #logger.info(f"Data... {clean_data=} ({len(clean_data)=}) {seed_name=} {len(seed_name)=}")
         # We're only caring about the seed in the start.
