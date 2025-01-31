@@ -43,6 +43,7 @@ location_name_to_id = {}
 monitor_total = 196
 monitorcount = [10,10,20,10,11,7,6,3,11,5,9,17,15,8,17,15,15,7]
 assert sum(monitorcount) == monitor_total
+location_total = monitor_total + 6 + 6 # Monitors + Special stages + Bosses
 
 # Name, offset, x, y
 monitors = [
@@ -326,15 +327,14 @@ for b in specials:
 emeralds = ["Blue Emerald (#1)", "Yellow Emerald (#2)", "Pink Emerald (#3)", 
             "Green Emerald (#4)", "Red Emerald (#5)", "Grey Emerald (#6)"]
 
-items = [
+items = []
+core_items = [
     [emeralds[0],           1, "progression"],
     [emeralds[1],           2, "progression"],
     [emeralds[2],           3, "progression"],
     [emeralds[3],           4, "progression"],
     [emeralds[4],           5, "progression"],
     [emeralds[5],           6, "progression"],
-    ["Disable GOAL blocks", 7, "useful"],
-    ["Disable R blocks",    8, "useful"],
     ["Green Hill Key",      9, "progression"],
     ["Marble Zone Key",    10, "progression"],
     ["Spring Yard Key",    11, "progression"],
@@ -351,25 +351,50 @@ items = [
     ["Special Stage 6 Key",22, "progression"]
 ]
 
+items.extend(core_items)
+goal_item = ["Disable GOAL blocks", 7, "useful"]
+r_item = ["Disable R blocks",    8, "useful"]
+items.extend([goal_item,r_item])
+
 possible_starters = [ "Green Hill Key", "Marble Zone Key", "Spring Yard Key", "Labyrinth Key", "Starlight Key", "Scrap Brain Key"]
 
 # Specials and Emeralds cancel out. Bosses and special keys cancel.
 # 196 monitors vs 2 buffs+8 zones, 186 rings needed
 # Except... the dummy key and one of the 6 proper zone keys are prefilled, so we need an extra 2 rings
+# And we might not send out the buffs.  So what we're actually going to do is generate more than we need and just not send some.
 # For reasons of sanity, 10 are considered "useful" and the rest are "filler"
 # In theory that means some will definitely show up but won't flood the useful spots.
-items.extend([[f"Ring {i}", 22+i, "useful"] for i in range(1,11)])
-items.extend([[f"Ring {i}", 22+i, "filler"] for i in range(11,189)])
+core_ring_list = [[f"Ring {i}", 22+i, "useful"] for i in range(1,11)]
+extended_ring_list= [[f"Ring {i}", 22+i, "filler"] for i in range(11,location_total)]
+items.extend(core_ring_list)
+items.extend(extended_ring_list)
+
+item_name_groups: Dict[str,set[str]] = {
+    "keys": {item[0] for item in items if "Key" in item[0]}
+}
+
+silly_filler = [[n, 22+location_total+i, "filler"] for i,n in enumerate([
+    "Fresh Chilli Dogs", "Couple of Grumpy Flickies", "Plastic Souvenir Ring", "Genuine Signed Prop Ring",
+    "Small Gold Ring with Flowy Writing", "Box of Popcorn", "Probably Important Plane Parts", "Nyanazon Delivery",
+    "Chao Plushie", "Amy's Favourite Sonic Plushie", "Eggman's Kitchen Sink", "Chao Cosplaying as an Emerald", 
+    "Tail's Tail Floof", "Companion Cube", "Worn Out Super Shoes", "Missing Car Keys", "Lost Sock", "Expired IOU for Unobtainium",
+    "Point Mass", "Spherical Cow", "Square Gold Ring", "Triangular Gold Ring", "Eggmobile Owner Manual", 
+    "Flying Battery Extended Warranty", "Defective Rock", "Knuckles's Brass Knuckles", "Fidget Spinner", "Betamax Tape",
+    "Mass Produced Treasure Map", "Missing Collision Geometry", "Ford's Spare Towel", "1:10 Scale Lockpicks", 
+    "Death Egg Purchase Receipt", "Casino Night Zone's Gambling Permit", "10 duplicate Sonic TCG cards", "Defective Spring",
+    "Eggman's Refurbished Missile", "Morph Ball", "Electronic Device Marked Critical", "Dereferenced Null Pointer", 
+    "Plastic Chaos Emerald", "Empty Iron Bru Bottle"
+])]
+items.extend(silly_filler)
+
+boring_filler = ["Space intentionally left blank", 22+location_total+len(silly_filler), "filler"]
+items.append(boring_filler)
 
 _item = namedtuple('Item', ['name', 'idx','id','itemclass'])
 item_name_to_id: Dict[str, int] = {}
 item_by_id: Dict[int,_item] = {}
 item_by_idx: Dict[int,_item] = {}
 item_by_name: Dict[str,_item] = {}
-
-item_name_groups: Dict[str,set[str]] = {
-    "keys": {item[0] for item in items if "Key" in item[0]}
-}
 
 for item in items:
     _i = _item(item[0],item[1],item[1]+id_base,item[2])

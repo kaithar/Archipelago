@@ -4,8 +4,7 @@ import typing
 
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
-from worlds._bizhawk import read, write
-
+from worlds._bizhawk import read, write, display_message
 from . import constants
 
 logger = logging.getLogger("Client")
@@ -137,6 +136,7 @@ class S1Client(BizHawkClient):
                 self.disconnect_pending = True
         #if cmd != "PrintJSON":
         #    logger.info(f"{cmd=} -> {args=}")
+        #if cmd == "PrintJSON" and args["type"] in {}:
         super().on_package(ctx, cmd, args)
 
     async def game_watcher(self, ctx):
@@ -151,7 +151,7 @@ class S1Client(BizHawkClient):
 
         if not ctx.server or not ctx.server.socket.open or ctx.server.socket.closed or ctx.remote_seed_name == MAGIC_EMPTY_SEED:
             return
-      
+        
         if ctx.sram_abstraction.extra_data[0] == b"\x0C": # Level mode
             map_code = constants.level_bytes.get(ctx.sram_abstraction.extra_data[1][:2],0)
         elif ctx.sram_abstraction.extra_data[0] == b"\x10": # Special zone
@@ -177,7 +177,8 @@ class S1Client(BizHawkClient):
             if seed_name == MAGIC_EMPTY_SEED:
                 # Only, there's a blank save, so we should write the full save.
                 output = [b'AS10']
-                output += bytes([MAGIC_BROKEN if constants.id_base+i in ctx.locations_checked else MAGIC_UNBROKEN 
+                #logger.info(f"{ctx.locations_checked=} {ctx.checked_locations=}")
+                output += bytes([MAGIC_BROKEN if constants.id_base+i in ctx.checked_locations else MAGIC_UNBROKEN 
                                  for i in range(1,len(constants.monitor_by_id)+1)])
                 output.extend([0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0])
                 output.append(ctx.remote_seed_name.encode())
@@ -201,7 +202,7 @@ class S1Client(BizHawkClient):
                 dirty = False
                 for i in range(1,len(constants.monitor_by_id)+1):
                     broken = (ctx.sram_abstraction.fields[i] == MAGIC_BROKEN)
-                    checked = constants.id_base+i in ctx.locations_checked
+                    checked = constants.id_base+i in ctx.checked_locations
                     if broken != checked:
                         #logger.info(f"{constants.monitor_by_idx[i]} {broken} != {checked}")
                         ctx.locations_checked.add(constants.id_base+i) # Do I need to do this?
@@ -211,7 +212,7 @@ class S1Client(BizHawkClient):
 
                 specials = ctx.sram_abstraction.fields[basis]
                 for bit, idx in [[1,221], [2,222], [4,223], [8,224], [16,225], [32,226]]:
-                    if specials&bit != 0 and constants.id_base+idx not in ctx.locations_checked:
+                    if specials&bit != 0 and constants.id_base+idx not in ctx.checked_locations:
                         ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
                         dirty = True
 
@@ -220,7 +221,7 @@ class S1Client(BizHawkClient):
                 # GH3, MZ3, SY3, LZ3, SL3, FZ
                 bosses = ctx.sram_abstraction.fields[basis+2]
                 for bit, idx in [[1,211], [2,212], [4,213], [8,214], [16,215], [32,216]]:
-                    if bosses&bit != 0 and constants.id_base+idx not in ctx.locations_checked:
+                    if bosses&bit != 0 and constants.id_base+idx not in ctx.checked_locations:
                         ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
                         dirty = True
 
@@ -248,6 +249,9 @@ class S1Client(BizHawkClient):
                     else:
                         ringcount += 1
                 
+                if ctx.slot_data.get("hard_mode", 0):
+                    ringcount = 0
+
                 ctx.sram_abstraction.stage(basis+1, [emeraldsset])
                 ctx.sram_abstraction.stage(basis+3, [buffs[0], buffs[1], ringcount, levelkeys, sskeys])
                 await ctx.sram_abstraction.commit(ctx)
@@ -259,7 +263,7 @@ class S1Client(BizHawkClient):
                         bosses == 0x3F # All bosses
                     and specials == 0x3F # All specials
                     and emeraldsset == 0x3F # All Emeralds received
-                    and ringcount >= 100 # 100 rings received.
+                    and ringcount >= ctx.slot_data.get("ring_goal",100) # Ring goal from config.
                 ):
                     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
             else:

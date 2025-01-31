@@ -1,18 +1,21 @@
 import os
 import pkgutil
 from typing import ClassVar, List
+import typing
 
 import BaseClasses
-from worlds.AutoWorld import World
-from worlds.generic.Rules import add_rule, set_rule, forbid_item, add_item_rule
+from worlds.AutoWorld import World, WebWorld
+from worlds.generic.Rules import set_rule, add_item_rule
 
 from BaseClasses import CollectionState, Entrance, Item, Region
 
 from . import constants, configurable, client, locations  # noqa: F401
 
+class Sonic1WebWorld(WebWorld):
+    option_groups = [configurable.ring_options]
+
 def map_key_index(idx):
     return int(idx or 0)
-
 class Sonic1World(World):
     """
     Beginning to go fast, Sonic 1991
@@ -26,6 +29,9 @@ class Sonic1World(World):
     settings_key = "sonic1_settings"
     settings: ClassVar[configurable.Sonic1Settings]
 
+    options_dataclass = configurable.Sonic1GameOptions
+    options: configurable.Sonic1GameOptions
+
     tracker_world = {
         "map_page_folder": "tracker",
         "map_page_maps": "maps/maps.json",
@@ -34,24 +40,53 @@ class Sonic1World(World):
         "map_page_index": map_key_index,
     }
 
+    web = Sonic1WebWorld()
+
     def create_item(self, name: str) -> Item:
         item = constants.item_by_name[name]
         return locations.S1Item(name, getattr(BaseClasses.ItemClassification,item.itemclass), item.id, self.player)
 
     def create_items(self) -> None:
-        exclude = ["Special Stages Key", self.random.choice(constants.possible_starters)]
-        for item in constants.item_by_idx.values():
-            oi = locations.S1Item(item.name, getattr(BaseClasses.ItemClassification,item.itemclass), item.id, self.player)
-            if item.name in exclude:
-                self.multiworld.push_precollected(oi)
-                exclude.remove(item.name)
+        local_items = ["Special Stages Key", self.random.choice(constants.possible_starters)]
+        item_prep = constants.core_items.copy()
+        to_push: typing.List[typing.List] = []
+        to_keep: typing.List[typing.List] = []
+
+        if self.options.allow_disable_goal:
+            item_prep.append(constants.goal_item)
+        if self.options.allow_disable_r:
+            item_prep.append(constants.r_item)
+
+        for item in item_prep:
+            if item[0] in local_items:
+                to_keep.append(item)
             else:
-                self.multiworld.itempool.append(oi)
+                to_push.append(item)
+
+        requested_rings = self.options.available_rings.value
+        for i in range(min(requested_rings,10)):
+            to_push.append(constants.core_ring_list[i])
+        for i in range(10,requested_rings):
+            to_push.append(constants.extended_ring_list[i])
+
+        filler_needed = constants.location_total - len(to_push)
+        if not self.options.boring_filler:
+            for item in self.random.sample(constants.silly_filler,min(filler_needed//2,len(constants.silly_filler))):
+                to_push.append(item)
+        
+        filler_needed = constants.location_total - len(to_push)
+        to_push.extend([constants.boring_filler]*filler_needed)
+        for src,dst in ((to_keep,self.multiworld.push_precollected), (to_push, self.multiworld.itempool.append)):
+            for i in src:
+                item = constants.item_by_idx[i[1]]
+                oi = locations.S1Item(item.name, getattr(BaseClasses.ItemClassification,item.itemclass), item.id, self.player)
+                dst(oi)
 
     def create_regions(self):
         menu = Region('Menu', self.player, self.multiworld)
         self.multiworld.regions.append(menu)
         regions: dict[str, locations.S1Region] = {}
+        exclusion_locations = []
         for z in constants.zones_base:
             if len(z.acts) == 3:
                 hub = locations.S1HubRegion(z.long, self.player, self.multiworld)
@@ -70,7 +105,7 @@ class Sonic1World(World):
                     e.connect(r)
                     for m in constants.monitor_by_zone[r.zone]:
                         mo = locations.S1Monitor(self.player, m, r)
-                        add_item_rule(mo, lambda item: item.name not in constants.item_name_groups["keys"])
+                        exclusion_locations.append(mo)
                         r.locations.append(mo)
                 regions[hub.name] = hub
                 self.multiworld.regions.append(hub)
@@ -88,7 +123,7 @@ class Sonic1World(World):
         for b in constants.boss_by_idx.values():
            r = regions[b.region]
            mo = locations.S1Boss(self.player, b, r)
-           add_item_rule(mo, lambda item: item.name not in constants.item_name_groups["keys"])
+           exclusion_locations.append(mo)
            r.locations.append(mo)
         # And Specials...
         specials: List[locations.S1Region] = []
@@ -104,9 +139,13 @@ class Sonic1World(World):
                 specials[-1].exits.append(e)
             e.connect(r)
             mo = locations.S1Special(self.player, constants.special_by_idx[ssid], r)
-            add_item_rule(mo, lambda item: item.name not in constants.item_name_groups["keys"])
+            exclusion_locations.append(mo)
             r.locations.append(mo)
             specials.append(r)
+        
+        if self.options.no_local_keys:
+            for mo in exclusion_locations:
+                add_item_rule(mo, lambda item: item.name not in constants.item_name_groups["keys"])
       
         # from Utils import visualize_regions
         # visualize_regions(self.multiworld.get_region("Menu", self.player), "my_world.puml")
@@ -137,4 +176,7 @@ class Sonic1World(World):
         patch.write_file("sonic1-ap.bsdiff4", pkgutil.get_data(__name__, "sonic1-ap.bsdiff4"))
         out_file_name = self.multiworld.get_out_file_name_base(self.player)
         patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
+
+    def fill_slot_data(self):
+        return self.options.as_dict("hard_mode","ring_goal")
 
