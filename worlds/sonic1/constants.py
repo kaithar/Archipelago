@@ -273,7 +273,7 @@ for z in play_order[:6]: # My monitor counts are in play order but I only want t
         for zonec in range(c): # loop to make the right number of monitors
             zone = f"{z}{stage}"
             m = _monitor(zone=zone, id=id_base+ms[zonec][1]+1, idx=ms[zonec][1]+1, offset=ms[zonec][1], 
-                         name=f"{ms[zonec][0]} ({zone_names[zone]} Monitor {zonec+1}/{c})",
+                         name=f"{ms[zonec][0]} ({zone_names[zone]} Monitor #{zonec+1})",
                          x=ms[zonec][2], y=ms[zonec][3])
             monitor_by_zone.setdefault(m.zone, []).append(m)
             monitor_by_name[m.name] = m
@@ -373,7 +373,7 @@ item_name_groups: Dict[str,set[str]] = {
     "keys": {item[0] for item in items if "Key" in item[0]}
 }
 
-silly_filler = [[n, 22+location_total+i, "filler"] for i,n in enumerate([
+silly_filler = [[f"{n} (Junk)", 22+location_total+i, "filler"] for i,n in enumerate([
     "Fresh Chilli Dogs", "Couple of Grumpy Flickies", "Plastic Souvenir Ring", "Genuine Signed Prop Ring",
     "Small Gold Ring with Flowy Writing", "Box of Popcorn", "Probably Important Plane Parts", "Nyanazon Delivery",
     "Chao Plushie", "Amy's Favourite Sonic Plushie", "Eggman's Kitchen Sink", "Chao Cosplaying as an Emerald", 
@@ -387,7 +387,7 @@ silly_filler = [[n, 22+location_total+i, "filler"] for i,n in enumerate([
 ])]
 items.extend(silly_filler)
 
-boring_filler = ["Space intentionally left blank", 22+location_total+len(silly_filler), "filler"]
+boring_filler = ["Space intentionally left blank (Junk)", 22+location_total+len(silly_filler), "filler"]
 items.append(boring_filler)
 
 _item = namedtuple('Item', ['name', 'idx','id','itemclass'])
