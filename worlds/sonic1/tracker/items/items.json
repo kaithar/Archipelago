@@ -1,0 +1,1913 @@
+[
+    {
+        "name": "Blue Emerald (#1)",
+        "type": "toggle",
+        "img": "images/items/blueemerald(#1).png",
+        "img_mods": "",
+        "codes": "blueemerald(#1),Blue Emerald (#1)"
+    },
+    {
+        "name": "Yellow Emerald (#2)",
+        "type": "toggle",
+        "img": "images/items/yellowemerald(#2).png",
+        "img_mods": "",
+        "codes": "yellowemerald(#2),Yellow Emerald (#2)"
+    },
+    {
+        "name": "Pink Emerald (#3)",
+        "type": "toggle",
+        "img": "images/items/pinkemerald(#3).png",
+        "img_mods": "",
+        "codes": "pinkemerald(#3),Pink Emerald (#3)"
+    },
+    {
+        "name": "Green Emerald (#4)",
+        "type": "toggle",
+        "img": "images/items/greenemerald(#4).png",
+        "img_mods": "",
+        "codes": "greenemerald(#4),Green Emerald (#4)"
+    },
+    {
+        "name": "Red Emerald (#5)",
+        "type": "toggle",
+        "img": "images/items/redemerald(#5).png",
+        "img_mods": "",
+        "codes": "redemerald(#5),Red Emerald (#5)"
+    },
+    {
+        "name": "Grey Emerald (#6)",
+        "type": "toggle",
+        "img": "images/items/greyemerald(#6).png",
+        "img_mods": "",
+        "codes": "greyemerald(#6),Grey Emerald (#6)"
+    },
+    {
+        "name": "Green Hill Key",
+        "type": "toggle",
+        "img": "images/items/greenhillkey.png",
+        "img_mods": "",
+        "codes": "greenhillkey,Green Hill Key"
+    },
+    {
+        "name": "Marble Zone Key",
+        "type": "toggle",
+        "img": "images/items/marblezonekey.png",
+        "img_mods": "",
+        "codes": "marblezonekey,Marble Zone Key"
+    },
+    {
+        "name": "Spring Yard Key",
+        "type": "toggle",
+        "img": "images/items/springyardkey.png",
+        "img_mods": "",
+        "codes": "springyardkey,Spring Yard Key"
+    },
+    {
+        "name": "Labyrinth Key",
+        "type": "toggle",
+        "img": "images/items/labyrinthkey.png",
+        "img_mods": "",
+        "codes": "labyrinthkey,Labyrinth Key"
+    },
+    {
+        "name": "Starlight Key",
+        "type": "toggle",
+        "img": "images/items/starlightkey.png",
+        "img_mods": "",
+        "codes": "starlightkey,Starlight Key"
+    },
+    {
+        "name": "Scrap Brain Key",
+        "type": "toggle",
+        "img": "images/items/scrapbrainkey.png",
+        "img_mods": "",
+        "codes": "scrapbrainkey,Scrap Brain Key"
+    },
+    {
+        "name": "Final Zone Key",
+        "type": "toggle",
+        "img": "images/items/finalzonekey.png",
+        "img_mods": "",
+        "codes": "finalzonekey,Final Zone Key"
+    },
+    {
+        "name": "Special Stages Key",
+        "type": "toggle",
+        "img": "images/items/specialstageskey.png",
+        "img_mods": "",
+        "codes": "specialstageskey,Special Stages Key"
+    },
+    {
+        "name": "Special Stage 1 Key",
+        "type": "toggle",
+        "img": "images/items/specialstage1key.png",
+        "img_mods": "",
+        "codes": "specialstage1key,Special Stage 1 Key"
+    },
+    {
+        "name": "Special Stage 2 Key",
+        "type": "toggle",
+        "img": "images/items/specialstage2key.png",
+        "img_mods": "",
+        "codes": "specialstage2key,Special Stage 2 Key"
+    },
+    {
+        "name": "Special Stage 3 Key",
+        "type": "toggle",
+        "img": "images/items/specialstage3key.png",
+        "img_mods": "",
+        "codes": "specialstage3key,Special Stage 3 Key"
+    },
+    {
+        "name": "Special Stage 4 Key",
+        "type": "toggle",
+        "img": "images/items/specialstage4key.png",
+        "img_mods": "",
+        "codes": "specialstage4key,Special Stage 4 Key"
+    },
+    {
+        "name": "Special Stage 5 Key",
+        "type": "toggle",
+        "img": "images/items/specialstage5key.png",
+        "img_mods": "",
+        "codes": "specialstage5key,Special Stage 5 Key"
+    },
+    {
+        "name": "Special Stage 6 Key",
+        "type": "toggle",
+        "img": "images/items/specialstage6key.png",
+        "img_mods": "",
+        "codes": "specialstage6key,Special Stage 6 Key"
+    },
+    {
+        "name": "Disable GOAL blocks",
+        "type": "toggle",
+        "img": "images/items/disablegoalblocks.png",
+        "img_mods": "",
+        "codes": "disablegoalblocks,Disable GOAL blocks"
+    },
+    {
+        "name": "Disable R blocks",
+        "type": "toggle",
+        "img": "images/items/disablerblocks.png",
+        "img_mods": "",
+        "codes": "disablerblocks,Disable R blocks"
+    },
+    {
+        "name": "Ring 1",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring1,Ring 1"
+    },
+    {
+        "name": "Ring 2",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring2,Ring 2"
+    },
+    {
+        "name": "Ring 3",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring3,Ring 3"
+    },
+    {
+        "name": "Ring 4",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring4,Ring 4"
+    },
+    {
+        "name": "Ring 5",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring5,Ring 5"
+    },
+    {
+        "name": "Ring 6",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring6,Ring 6"
+    },
+    {
+        "name": "Ring 7",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring7,Ring 7"
+    },
+    {
+        "name": "Ring 8",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring8,Ring 8"
+    },
+    {
+        "name": "Ring 9",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring9,Ring 9"
+    },
+    {
+        "name": "Ring 10",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring10,Ring 10"
+    },
+    {
+        "name": "Ring 11",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring11,Ring 11"
+    },
+    {
+        "name": "Ring 12",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring12,Ring 12"
+    },
+    {
+        "name": "Ring 13",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring13,Ring 13"
+    },
+    {
+        "name": "Ring 14",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring14,Ring 14"
+    },
+    {
+        "name": "Ring 15",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring15,Ring 15"
+    },
+    {
+        "name": "Ring 16",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring16,Ring 16"
+    },
+    {
+        "name": "Ring 17",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring17,Ring 17"
+    },
+    {
+        "name": "Ring 18",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring18,Ring 18"
+    },
+    {
+        "name": "Ring 19",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring19,Ring 19"
+    },
+    {
+        "name": "Ring 20",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring20,Ring 20"
+    },
+    {
+        "name": "Ring 21",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring21,Ring 21"
+    },
+    {
+        "name": "Ring 22",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring22,Ring 22"
+    },
+    {
+        "name": "Ring 23",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring23,Ring 23"
+    },
+    {
+        "name": "Ring 24",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring24,Ring 24"
+    },
+    {
+        "name": "Ring 25",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring25,Ring 25"
+    },
+    {
+        "name": "Ring 26",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring26,Ring 26"
+    },
+    {
+        "name": "Ring 27",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring27,Ring 27"
+    },
+    {
+        "name": "Ring 28",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring28,Ring 28"
+    },
+    {
+        "name": "Ring 29",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring29,Ring 29"
+    },
+    {
+        "name": "Ring 30",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring30,Ring 30"
+    },
+    {
+        "name": "Ring 31",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring31,Ring 31"
+    },
+    {
+        "name": "Ring 32",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring32,Ring 32"
+    },
+    {
+        "name": "Ring 33",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring33,Ring 33"
+    },
+    {
+        "name": "Ring 34",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring34,Ring 34"
+    },
+    {
+        "name": "Ring 35",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring35,Ring 35"
+    },
+    {
+        "name": "Ring 36",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring36,Ring 36"
+    },
+    {
+        "name": "Ring 37",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring37,Ring 37"
+    },
+    {
+        "name": "Ring 38",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring38,Ring 38"
+    },
+    {
+        "name": "Ring 39",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring39,Ring 39"
+    },
+    {
+        "name": "Ring 40",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring40,Ring 40"
+    },
+    {
+        "name": "Ring 41",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring41,Ring 41"
+    },
+    {
+        "name": "Ring 42",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring42,Ring 42"
+    },
+    {
+        "name": "Ring 43",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring43,Ring 43"
+    },
+    {
+        "name": "Ring 44",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring44,Ring 44"
+    },
+    {
+        "name": "Ring 45",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring45,Ring 45"
+    },
+    {
+        "name": "Ring 46",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring46,Ring 46"
+    },
+    {
+        "name": "Ring 47",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring47,Ring 47"
+    },
+    {
+        "name": "Ring 48",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring48,Ring 48"
+    },
+    {
+        "name": "Ring 49",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring49,Ring 49"
+    },
+    {
+        "name": "Ring 50",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring50,Ring 50"
+    },
+    {
+        "name": "Ring 51",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring51,Ring 51"
+    },
+    {
+        "name": "Ring 52",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring52,Ring 52"
+    },
+    {
+        "name": "Ring 53",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring53,Ring 53"
+    },
+    {
+        "name": "Ring 54",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring54,Ring 54"
+    },
+    {
+        "name": "Ring 55",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring55,Ring 55"
+    },
+    {
+        "name": "Ring 56",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring56,Ring 56"
+    },
+    {
+        "name": "Ring 57",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring57,Ring 57"
+    },
+    {
+        "name": "Ring 58",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring58,Ring 58"
+    },
+    {
+        "name": "Ring 59",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring59,Ring 59"
+    },
+    {
+        "name": "Ring 60",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring60,Ring 60"
+    },
+    {
+        "name": "Ring 61",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring61,Ring 61"
+    },
+    {
+        "name": "Ring 62",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring62,Ring 62"
+    },
+    {
+        "name": "Ring 63",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring63,Ring 63"
+    },
+    {
+        "name": "Ring 64",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring64,Ring 64"
+    },
+    {
+        "name": "Ring 65",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring65,Ring 65"
+    },
+    {
+        "name": "Ring 66",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring66,Ring 66"
+    },
+    {
+        "name": "Ring 67",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring67,Ring 67"
+    },
+    {
+        "name": "Ring 68",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring68,Ring 68"
+    },
+    {
+        "name": "Ring 69",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring69,Ring 69"
+    },
+    {
+        "name": "Ring 70",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring70,Ring 70"
+    },
+    {
+        "name": "Ring 71",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring71,Ring 71"
+    },
+    {
+        "name": "Ring 72",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring72,Ring 72"
+    },
+    {
+        "name": "Ring 73",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring73,Ring 73"
+    },
+    {
+        "name": "Ring 74",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring74,Ring 74"
+    },
+    {
+        "name": "Ring 75",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring75,Ring 75"
+    },
+    {
+        "name": "Ring 76",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring76,Ring 76"
+    },
+    {
+        "name": "Ring 77",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring77,Ring 77"
+    },
+    {
+        "name": "Ring 78",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring78,Ring 78"
+    },
+    {
+        "name": "Ring 79",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring79,Ring 79"
+    },
+    {
+        "name": "Ring 80",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring80,Ring 80"
+    },
+    {
+        "name": "Ring 81",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring81,Ring 81"
+    },
+    {
+        "name": "Ring 82",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring82,Ring 82"
+    },
+    {
+        "name": "Ring 83",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring83,Ring 83"
+    },
+    {
+        "name": "Ring 84",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring84,Ring 84"
+    },
+    {
+        "name": "Ring 85",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring85,Ring 85"
+    },
+    {
+        "name": "Ring 86",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring86,Ring 86"
+    },
+    {
+        "name": "Ring 87",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring87,Ring 87"
+    },
+    {
+        "name": "Ring 88",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring88,Ring 88"
+    },
+    {
+        "name": "Ring 89",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring89,Ring 89"
+    },
+    {
+        "name": "Ring 90",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring90,Ring 90"
+    },
+    {
+        "name": "Ring 91",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring91,Ring 91"
+    },
+    {
+        "name": "Ring 92",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring92,Ring 92"
+    },
+    {
+        "name": "Ring 93",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring93,Ring 93"
+    },
+    {
+        "name": "Ring 94",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring94,Ring 94"
+    },
+    {
+        "name": "Ring 95",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring95,Ring 95"
+    },
+    {
+        "name": "Ring 96",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring96,Ring 96"
+    },
+    {
+        "name": "Ring 97",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring97,Ring 97"
+    },
+    {
+        "name": "Ring 98",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring98,Ring 98"
+    },
+    {
+        "name": "Ring 99",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring99,Ring 99"
+    },
+    {
+        "name": "Ring 100",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring100,Ring 100"
+    },
+    {
+        "name": "Ring 101",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring101,Ring 101"
+    },
+    {
+        "name": "Ring 102",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring102,Ring 102"
+    },
+    {
+        "name": "Ring 103",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring103,Ring 103"
+    },
+    {
+        "name": "Ring 104",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring104,Ring 104"
+    },
+    {
+        "name": "Ring 105",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring105,Ring 105"
+    },
+    {
+        "name": "Ring 106",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring106,Ring 106"
+    },
+    {
+        "name": "Ring 107",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring107,Ring 107"
+    },
+    {
+        "name": "Ring 108",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring108,Ring 108"
+    },
+    {
+        "name": "Ring 109",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring109,Ring 109"
+    },
+    {
+        "name": "Ring 110",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring110,Ring 110"
+    },
+    {
+        "name": "Ring 111",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring111,Ring 111"
+    },
+    {
+        "name": "Ring 112",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring112,Ring 112"
+    },
+    {
+        "name": "Ring 113",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring113,Ring 113"
+    },
+    {
+        "name": "Ring 114",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring114,Ring 114"
+    },
+    {
+        "name": "Ring 115",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring115,Ring 115"
+    },
+    {
+        "name": "Ring 116",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring116,Ring 116"
+    },
+    {
+        "name": "Ring 117",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring117,Ring 117"
+    },
+    {
+        "name": "Ring 118",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring118,Ring 118"
+    },
+    {
+        "name": "Ring 119",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring119,Ring 119"
+    },
+    {
+        "name": "Ring 120",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring120,Ring 120"
+    },
+    {
+        "name": "Ring 121",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring121,Ring 121"
+    },
+    {
+        "name": "Ring 122",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring122,Ring 122"
+    },
+    {
+        "name": "Ring 123",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring123,Ring 123"
+    },
+    {
+        "name": "Ring 124",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring124,Ring 124"
+    },
+    {
+        "name": "Ring 125",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring125,Ring 125"
+    },
+    {
+        "name": "Ring 126",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring126,Ring 126"
+    },
+    {
+        "name": "Ring 127",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring127,Ring 127"
+    },
+    {
+        "name": "Ring 128",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring128,Ring 128"
+    },
+    {
+        "name": "Ring 129",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring129,Ring 129"
+    },
+    {
+        "name": "Ring 130",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring130,Ring 130"
+    },
+    {
+        "name": "Ring 131",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring131,Ring 131"
+    },
+    {
+        "name": "Ring 132",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring132,Ring 132"
+    },
+    {
+        "name": "Ring 133",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring133,Ring 133"
+    },
+    {
+        "name": "Ring 134",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring134,Ring 134"
+    },
+    {
+        "name": "Ring 135",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring135,Ring 135"
+    },
+    {
+        "name": "Ring 136",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring136,Ring 136"
+    },
+    {
+        "name": "Ring 137",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring137,Ring 137"
+    },
+    {
+        "name": "Ring 138",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring138,Ring 138"
+    },
+    {
+        "name": "Ring 139",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring139,Ring 139"
+    },
+    {
+        "name": "Ring 140",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring140,Ring 140"
+    },
+    {
+        "name": "Ring 141",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring141,Ring 141"
+    },
+    {
+        "name": "Ring 142",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring142,Ring 142"
+    },
+    {
+        "name": "Ring 143",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring143,Ring 143"
+    },
+    {
+        "name": "Ring 144",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring144,Ring 144"
+    },
+    {
+        "name": "Ring 145",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring145,Ring 145"
+    },
+    {
+        "name": "Ring 146",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring146,Ring 146"
+    },
+    {
+        "name": "Ring 147",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring147,Ring 147"
+    },
+    {
+        "name": "Ring 148",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring148,Ring 148"
+    },
+    {
+        "name": "Ring 149",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring149,Ring 149"
+    },
+    {
+        "name": "Ring 150",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring150,Ring 150"
+    },
+    {
+        "name": "Ring 151",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring151,Ring 151"
+    },
+    {
+        "name": "Ring 152",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring152,Ring 152"
+    },
+    {
+        "name": "Ring 153",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring153,Ring 153"
+    },
+    {
+        "name": "Ring 154",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring154,Ring 154"
+    },
+    {
+        "name": "Ring 155",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring155,Ring 155"
+    },
+    {
+        "name": "Ring 156",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring156,Ring 156"
+    },
+    {
+        "name": "Ring 157",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring157,Ring 157"
+    },
+    {
+        "name": "Ring 158",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring158,Ring 158"
+    },
+    {
+        "name": "Ring 159",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring159,Ring 159"
+    },
+    {
+        "name": "Ring 160",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring160,Ring 160"
+    },
+    {
+        "name": "Ring 161",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring161,Ring 161"
+    },
+    {
+        "name": "Ring 162",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring162,Ring 162"
+    },
+    {
+        "name": "Ring 163",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring163,Ring 163"
+    },
+    {
+        "name": "Ring 164",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring164,Ring 164"
+    },
+    {
+        "name": "Ring 165",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring165,Ring 165"
+    },
+    {
+        "name": "Ring 166",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring166,Ring 166"
+    },
+    {
+        "name": "Ring 167",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring167,Ring 167"
+    },
+    {
+        "name": "Ring 168",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring168,Ring 168"
+    },
+    {
+        "name": "Ring 169",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring169,Ring 169"
+    },
+    {
+        "name": "Ring 170",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring170,Ring 170"
+    },
+    {
+        "name": "Ring 171",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring171,Ring 171"
+    },
+    {
+        "name": "Ring 172",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring172,Ring 172"
+    },
+    {
+        "name": "Ring 173",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring173,Ring 173"
+    },
+    {
+        "name": "Ring 174",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring174,Ring 174"
+    },
+    {
+        "name": "Ring 175",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring175,Ring 175"
+    },
+    {
+        "name": "Ring 176",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring176,Ring 176"
+    },
+    {
+        "name": "Ring 177",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring177,Ring 177"
+    },
+    {
+        "name": "Ring 178",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring178,Ring 178"
+    },
+    {
+        "name": "Ring 179",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring179,Ring 179"
+    },
+    {
+        "name": "Ring 180",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring180,Ring 180"
+    },
+    {
+        "name": "Ring 181",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring181,Ring 181"
+    },
+    {
+        "name": "Ring 182",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring182,Ring 182"
+    },
+    {
+        "name": "Ring 183",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring183,Ring 183"
+    },
+    {
+        "name": "Ring 184",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring184,Ring 184"
+    },
+    {
+        "name": "Ring 185",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring185,Ring 185"
+    },
+    {
+        "name": "Ring 186",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring186,Ring 186"
+    },
+    {
+        "name": "Ring 187",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring187,Ring 187"
+    },
+    {
+        "name": "Ring 188",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring188,Ring 188"
+    },
+    {
+        "name": "Ring 189",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring189,Ring 189"
+    },
+    {
+        "name": "Ring 190",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring190,Ring 190"
+    },
+    {
+        "name": "Ring 191",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring191,Ring 191"
+    },
+    {
+        "name": "Ring 192",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring192,Ring 192"
+    },
+    {
+        "name": "Ring 193",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring193,Ring 193"
+    },
+    {
+        "name": "Ring 194",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring194,Ring 194"
+    },
+    {
+        "name": "Ring 195",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring195,Ring 195"
+    },
+    {
+        "name": "Ring 196",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring196,Ring 196"
+    },
+    {
+        "name": "Ring 197",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring197,Ring 197"
+    },
+    {
+        "name": "Ring 198",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring198,Ring 198"
+    },
+    {
+        "name": "Ring 199",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring199,Ring 199"
+    },
+    {
+        "name": "Ring 200",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring200,Ring 200"
+    },
+    {
+        "name": "Ring 201",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring201,Ring 201"
+    },
+    {
+        "name": "Ring 202",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring202,Ring 202"
+    },
+    {
+        "name": "Ring 203",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring203,Ring 203"
+    },
+    {
+        "name": "Ring 204",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring204,Ring 204"
+    },
+    {
+        "name": "Ring 205",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring205,Ring 205"
+    },
+    {
+        "name": "Ring 206",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring206,Ring 206"
+    },
+    {
+        "name": "Ring 207",
+        "type": "toggle",
+        "img": "images/items/ring.png",
+        "img_mods": "",
+        "codes": "ring207,Ring 207"
+    },
+    {
+        "name": "Fresh Chilli Dogs (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "freshchillidogs(junk),Fresh Chilli Dogs (Junk)"
+    },
+    {
+        "name": "Couple of Grumpy Flickies (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "coupleofgrumpyflickies(junk),Couple of Grumpy Flickies (Junk)"
+    },
+    {
+        "name": "Plastic Souvenir Ring (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "plasticsouvenirring(junk),Plastic Souvenir Ring (Junk)"
+    },
+    {
+        "name": "Genuine Signed Prop Ring (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "genuinesignedpropring(junk),Genuine Signed Prop Ring (Junk)"
+    },
+    {
+        "name": "Small Gold Ring with Flowy Writing (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "smallgoldringwithflowywriting(junk),Small Gold Ring with Flowy Writing (Junk)"
+    },
+    {
+        "name": "Box of Popcorn (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "boxofpopcorn(junk),Box of Popcorn (Junk)"
+    },
+    {
+        "name": "Probably Important Plane Parts (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "probablyimportantplaneparts(junk),Probably Important Plane Parts (Junk)"
+    },
+    {
+        "name": "Nyanazon Delivery (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "nyanazondelivery(junk),Nyanazon Delivery (Junk)"
+    },
+    {
+        "name": "Chao Plushie (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "chaoplushie(junk),Chao Plushie (Junk)"
+    },
+    {
+        "name": "Amy's Favourite Sonic Plushie (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "amy'sfavouritesonicplushie(junk),Amy's Favourite Sonic Plushie (Junk)"
+    },
+    {
+        "name": "Eggman's Kitchen Sink (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "eggman'skitchensink(junk),Eggman's Kitchen Sink (Junk)"
+    },
+    {
+        "name": "Chao Cosplaying as an Emerald (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "chaocosplayingasanemerald(junk),Chao Cosplaying as an Emerald (Junk)"
+    },
+    {
+        "name": "Tail's Tail Floof (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "tail'stailfloof(junk),Tail's Tail Floof (Junk)"
+    },
+    {
+        "name": "Companion Cube (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "companioncube(junk),Companion Cube (Junk)"
+    },
+    {
+        "name": "Worn Out Super Shoes (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "wornoutsupershoes(junk),Worn Out Super Shoes (Junk)"
+    },
+    {
+        "name": "Missing Car Keys (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "missingcarkeys(junk),Missing Car Keys (Junk)"
+    },
+    {
+        "name": "Lost Sock (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "lostsock(junk),Lost Sock (Junk)"
+    },
+    {
+        "name": "Expired IOU for Unobtainium (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "expirediouforunobtainium(junk),Expired IOU for Unobtainium (Junk)"
+    },
+    {
+        "name": "Point Mass (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "pointmass(junk),Point Mass (Junk)"
+    },
+    {
+        "name": "Spherical Cow (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "sphericalcow(junk),Spherical Cow (Junk)"
+    },
+    {
+        "name": "Square Gold Ring (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "squaregoldring(junk),Square Gold Ring (Junk)"
+    },
+    {
+        "name": "Triangular Gold Ring (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "triangulargoldring(junk),Triangular Gold Ring (Junk)"
+    },
+    {
+        "name": "Eggmobile Owner Manual (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "eggmobileownermanual(junk),Eggmobile Owner Manual (Junk)"
+    },
+    {
+        "name": "Flying Battery Extended Warranty (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "flyingbatteryextendedwarranty(junk),Flying Battery Extended Warranty (Junk)"
+    },
+    {
+        "name": "Defective Rock (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "defectiverock(junk),Defective Rock (Junk)"
+    },
+    {
+        "name": "Knuckles's Brass Knuckles (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "knuckles'sbrassknuckles(junk),Knuckles's Brass Knuckles (Junk)"
+    },
+    {
+        "name": "Fidget Spinner (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "fidgetspinner(junk),Fidget Spinner (Junk)"
+    },
+    {
+        "name": "Betamax Tape (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "betamaxtape(junk),Betamax Tape (Junk)"
+    },
+    {
+        "name": "Mass Produced Treasure Map (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "massproducedtreasuremap(junk),Mass Produced Treasure Map (Junk)"
+    },
+    {
+        "name": "Missing Collision Geometry (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "missingcollisiongeometry(junk),Missing Collision Geometry (Junk)"
+    },
+    {
+        "name": "Ford's Spare Towel (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "ford'ssparetowel(junk),Ford's Spare Towel (Junk)"
+    },
+    {
+        "name": "1:10 Scale Lockpicks (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "1:10scalelockpicks(junk),1:10 Scale Lockpicks (Junk)"
+    },
+    {
+        "name": "Death Egg Purchase Receipt (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "deatheggpurchasereceipt(junk),Death Egg Purchase Receipt (Junk)"
+    },
+    {
+        "name": "Casino Night Zone's Gambling Permit (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "casinonightzone'sgamblingpermit(junk),Casino Night Zone's Gambling Permit (Junk)"
+    },
+    {
+        "name": "10 duplicate Sonic TCG cards (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "10duplicatesonictcgcards(junk),10 duplicate Sonic TCG cards (Junk)"
+    },
+    {
+        "name": "Defective Spring (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "defectivespring(junk),Defective Spring (Junk)"
+    },
+    {
+        "name": "Eggman's Refurbished Missile (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "eggman'srefurbishedmissile(junk),Eggman's Refurbished Missile (Junk)"
+    },
+    {
+        "name": "Morph Ball (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "morphball(junk),Morph Ball (Junk)"
+    },
+    {
+        "name": "Electronic Device Marked Critical (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "electronicdevicemarkedcritical(junk),Electronic Device Marked Critical (Junk)"
+    },
+    {
+        "name": "Dereferenced Null Pointer (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "dereferencednullpointer(junk),Dereferenced Null Pointer (Junk)"
+    },
+    {
+        "name": "Plastic Chaos Emerald (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "plasticchaosemerald(junk),Plastic Chaos Emerald (Junk)"
+    },
+    {
+        "name": "Empty Iron Bru Bottle (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "emptyironbrubottle(junk),Empty Iron Bru Bottle (Junk)"
+    },
+    {
+        "name": "Additional Pylons (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "additionalpylons(junk),Additional Pylons (Junk)"
+    },
+    {
+        "name": "Space intentionally left blank (Junk)",
+        "type": "toggle",
+        "img": "images/items/junk.png",
+        "img_mods": "",
+        "codes": "spaceintentionallyleftblank(junk),Space intentionally left blank (Junk)"
+    }
+]
