@@ -114,9 +114,10 @@ class S1Client(BizHawkClient):
     async def validate_rom(self, ctx):
         # loaded_hash = await get_hash(ctx.bizhawk_ctx)
         print(ctx.rom_hash)
-        if ctx.rom_hash == "3ED80290E4197EEDCD981FD402F94F794F724A8E": # Patched against known `Sonic The Hedgehog (W) (REV00)`
+        if ctx.rom_hash == "5935F48C40D03AF1C25F1D7C0303DF0FAC7B9BDD": # Patched against known `Sonic The Hedgehog (W) (REV00)`
             ctx.game = self.game
             ctx.items_handling = 0b111
+            ctx.finished_game = False
             ctx.remote_seed_name = MAGIC_EMPTY_SEED
             ctx.rom_seed_name = MAGIC_EMPTY_SEED
             ctx.sram_abstraction = SegaSRAM(">4s196BBBBBBBBB20s")
@@ -130,10 +131,20 @@ class S1Client(BizHawkClient):
         if cmd == 'RoomInfo':
             logger.debug(f"{args['seed_name']=} ?= {ctx.rom_seed_name=}")
             ctx.remote_seed_name = f"{args['seed_name'][-20:]:20}"
-            if ctx.rom_seed_name != ctx.remote_seed_name and ctx.rom_seed_name != MAGIC_EMPTY_SEED:
-                # CommonClient's on_package displays an error to the user in this case, but connection is not cancelled.
-                self.game_state = False
-                self.disconnect_pending = True
+            ctx.seed_name = args['seed_name']
+            if ctx.rom_seed_name != ctx.remote_seed_name:
+                if ctx.rom_seed_name != MAGIC_EMPTY_SEED:
+                  # CommonClient's on_package displays an error to the user in this case, but connection is not cancelled.
+                  self.game_state = False
+                  self.disconnect_pending = True
+                  print("foo")
+                print("bar")
+                if len(ctx.locations_checked) != 0:
+                    # This is in the hopes of avoiding sending reused data
+                    ctx.locations_checked.clear()
+                    ctx.locations_scouted.clear()
+                    ctx.stored_data_notification_keys.clear()
+                    ctx.checked_locations.clear()
         #if cmd != "PrintJSON":
         #    logger.info(f"{cmd=} -> {args=}")
         #if cmd == "PrintJSON" and args["type"] in {}:
@@ -153,7 +164,11 @@ class S1Client(BizHawkClient):
             return
         
         if ctx.sram_abstraction.extra_data[0] == b"\x0C": # Level mode
-            map_code = constants.level_bytes.get(ctx.sram_abstraction.extra_data[1][:2],0)
+            # This fixes the oddity of the game switching to GHZ1 for special stage conclusion:
+            if ctx.curr_map not in range(19,25):
+                map_code = constants.level_bytes.get(ctx.sram_abstraction.extra_data[1][:2],0)
+            else:
+                map_code = ctx.curr_map
         elif ctx.sram_abstraction.extra_data[0] == b"\x10": # Special zone
             map_code = int(ctx.sram_abstraction.extra_data[1][6])+19
         else:
@@ -172,6 +187,8 @@ class S1Client(BizHawkClient):
                 }],
             }])
 
+        cleanslate = False
+
         if ctx.sram_abstraction.fields[0] == b'AS10':
             # So, this should be valid save data...
             if seed_name == MAGIC_EMPTY_SEED:
@@ -183,8 +200,10 @@ class S1Client(BizHawkClient):
                 output.extend([0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0])
                 output.append(ctx.remote_seed_name.encode())
                 await ctx.sram_abstraction.full_write(ctx, output)
+                await ctx.sram_abstraction.read_bytes(ctx)
                 seed_name = ctx.remote_seed_name
                 ctx.rom_seed_name = seed_name
+                cleanslate = True
 
                 '''
                 move.w #0,(a0)+ ; Special zone bitfield
@@ -211,19 +230,31 @@ class S1Client(BizHawkClient):
                 basis = 1+len(constants.monitor_by_id)
 
                 specials = ctx.sram_abstraction.fields[basis]
+                special_build = 0
                 for bit, idx in [[1,221], [2,222], [4,223], [8,224], [16,225], [32,226]]:
-                    if specials&bit != 0 and constants.id_base+idx not in ctx.checked_locations:
-                        ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
-                        dirty = True
+                    if constants.id_base+idx in ctx.checked_locations:
+                        special_build |= bit
+                    else:
+                        if specials&bit != 0:
+                            ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
+                            dirty = True
+                if cleanslate:
+                    ctx.sram_abstraction.stage(basis, [special_build])
 
                 emeralds = ctx.sram_abstraction.fields[basis+1]
 
                 # GH3, MZ3, SY3, LZ3, SL3, FZ
                 bosses = ctx.sram_abstraction.fields[basis+2]
+                boss_build = 0
                 for bit, idx in [[1,211], [2,212], [4,213], [8,214], [16,215], [32,216]]:
-                    if bosses&bit != 0 and constants.id_base+idx not in ctx.checked_locations:
-                        ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
-                        dirty = True
+                    if constants.id_base+idx in ctx.checked_locations:
+                        boss_build |= bit
+                    else:
+                        if bosses&bit != 0:
+                            ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
+                            dirty = True
+                if cleanslate:
+                    ctx.sram_abstraction.stage(basis+2, [boss_build])
 
                 #logger.info(f"Data... {clean_data[basis:]=}")
                 #logger.info(f"Data... {ctx.items_received=}")
@@ -246,6 +277,9 @@ class S1Client(BizHawkClient):
                         levelkeys |= [1,2,4,8,16,32,64,128][idx-9]
                     elif idx in range(17,23):
                         sskeys |= [1,2,4,8,16,32,64,128][idx-17]
+                    elif idx >= constants.filler_base:
+                        # Junk item... do nothing
+                        pass
                     else:
                         ringcount += 1
                 

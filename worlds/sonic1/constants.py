@@ -373,7 +373,9 @@ item_name_groups: Dict[str,set[str]] = {
     "keys": {item[0] for item in items if "Key" in item[0]}
 }
 
-silly_filler = [[f"{n} (Junk)", 22+location_total+i, "filler"] for i,n in enumerate([
+filler_base = 22+location_total
+
+silly_filler = [[f"{n} (Junk)", filler_base+i, "filler"] for i,n in enumerate([
     "Fresh Chilli Dogs", "Couple of Grumpy Flickies", "Plastic Souvenir Ring", "Genuine Signed Prop Ring",
     "Small Gold Ring with Flowy Writing", "Box of Popcorn", "Probably Important Plane Parts", "Nyanazon Delivery",
     "Chao Plushie", "Amy's Favourite Sonic Plushie", "Eggman's Kitchen Sink", "Chao Cosplaying as an Emerald", 
@@ -383,11 +385,11 @@ silly_filler = [[f"{n} (Junk)", 22+location_total+i, "filler"] for i,n in enumer
     "Mass Produced Treasure Map", "Missing Collision Geometry", "Ford's Spare Towel", "1:10 Scale Lockpicks", 
     "Death Egg Purchase Receipt", "Casino Night Zone's Gambling Permit", "10 duplicate Sonic TCG cards", "Defective Spring",
     "Eggman's Refurbished Missile", "Morph Ball", "Electronic Device Marked Critical", "Dereferenced Null Pointer", 
-    "Plastic Chaos Emerald", "Empty Iron Bru Bottle"
+    "Plastic Chaos Emerald", "Empty Iron Bru Bottle", "Additional Pylons"
 ])]
 items.extend(silly_filler)
 
-boring_filler = ["Space intentionally left blank (Junk)", 22+location_total+len(silly_filler), "filler"]
+boring_filler = ["Space intentionally left blank (Junk)", filler_base+len(silly_filler), "filler"]
 items.append(boring_filler)
 
 _item = namedtuple('Item', ['name', 'idx','id','itemclass'])
