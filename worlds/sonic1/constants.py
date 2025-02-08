@@ -361,17 +361,10 @@ possible_starters = [ "Green Hill Key", "Marble Zone Key", "Spring Yard Key", "L
 # Specials and Emeralds cancel out. Bosses and special keys cancel.
 # 196 monitors vs 2 buffs+8 zones, 186 rings needed
 # Except... the dummy key and one of the 6 proper zone keys are prefilled, so we need an extra 2 rings
-# And we might not send out the buffs.  So what we're actually going to do is generate more than we need and just not send some.
-# For reasons of sanity, 10 are considered "useful" and the rest are "filler"
-# In theory that means some will definitely show up but won't flood the useful spots.
-core_ring_list = [[f"Ring {i}", 22+i, "useful"] for i in range(1,11)]
-extended_ring_list= [[f"Ring {i}", 22+i, "filler"] for i in range(11,location_total)]
-items.extend(core_ring_list)
-items.extend(extended_ring_list)
-
-item_name_groups: Dict[str,set[str]] = {
-    "keys": {item[0] for item in items if "Key" in item[0]}
-}
+# And we might not send out the buffs.
+prog_ring = ["Shiny Ring", 23, "progression"]
+fill_ring = ["Gold Ring", 24, "useful"]
+items.extend([prog_ring, fill_ring])
 
 filler_base = 22+location_total
 
@@ -391,6 +384,12 @@ items.extend(silly_filler)
 
 boring_filler = ["Space intentionally left blank (Junk)", filler_base+len(silly_filler), "filler"]
 items.append(boring_filler)
+
+item_name_groups: Dict[str,set[str]] = {
+    "keys": {item[0] for item in items if "Key" in item[0]},
+    "rings": {"Shiny Ring", "Gold Ring"},
+    "junk": {item[0] for item in silly_filler+[boring_filler]}
+}
 
 _item = namedtuple('Item', ['name', 'idx','id','itemclass'])
 item_name_to_id: Dict[str, int] = {}

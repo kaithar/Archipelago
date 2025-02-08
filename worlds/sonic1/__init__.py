@@ -7,15 +7,19 @@ import BaseClasses
 from worlds.AutoWorld import World, WebWorld
 from worlds.generic.Rules import set_rule, add_item_rule
 
-from BaseClasses import CollectionState, Entrance, Item, Region
+from BaseClasses import CollectionState, Entrance, Item, Region, Tutorial
 
 from . import constants, configurable, client, locations  # noqa: F401
 
 class Sonic1WebWorld(WebWorld):
-    option_groups = [configurable.ring_options]
+    option_groups = [configurable.ring_options,configurable.special_generics]
+    tutorials = [Tutorial(
+        "Sonic 1 Setup Guide", "A short guide to setting up Sonic 1 for Archipelago",
+        "English", "setup_en.md", "setup/en", ["Kaithar"])]
 
 def map_key_index(idx):
     return int(idx or 0)
+
 class Sonic1World(World):
     """
     Beginning to go fast, Sonic 1991
@@ -25,6 +29,7 @@ class Sonic1World(World):
     data_version = 1
     item_name_to_id= constants.item_name_to_id
     location_name_to_id = constants.location_name_to_id
+    item_name_groups = constants.item_name_groups
 
     settings_key = "sonic1_settings"
     settings: ClassVar[configurable.Sonic1Settings]
@@ -63,11 +68,9 @@ class Sonic1World(World):
             else:
                 to_push.append(item)
 
-        requested_rings = self.options.available_rings.value
-        for i in range(min(requested_rings,10)):
-            to_push.append(constants.core_ring_list[i])
-        for i in range(10,requested_rings):
-            to_push.append(constants.extended_ring_list[i])
+        requested_rings = self.options.available_rings.value - self.options.ring_goal.value
+        to_push.extend([constants.prog_ring]*self.options.ring_goal.value)
+        to_push.extend([constants.fill_ring]*requested_rings)
 
         filler_needed = constants.location_total - len(to_push)
         if not self.options.boring_filler:
@@ -168,12 +171,11 @@ class Sonic1World(World):
             for c in constants.emeralds:
                 if not state.has(c,self.player):
                     return False
-            return True
+            return state.has_group("rings",self.player,self.options.ring_goal.value)
         self.multiworld.completion_condition[self.player] = lambda state: completion_check(state)
 
     def generate_output(self, output_directory: str) -> None:
         patch = configurable.Sonic1ProcedurePatch(player=self.player, player_name=self.player_name)
-        patch.write_file("sonic1-ap.bsdiff4", pkgutil.get_data(__name__, "sonic1-ap.bsdiff4"))
         out_file_name = self.multiworld.get_out_file_name_base(self.player)
         patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
 

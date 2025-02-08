@@ -3,15 +3,12 @@
 ## What you need to know about the Archipelago mode
 
 - The location checks for this game are every monitor, all six bosses and all six special zones.
-- This world will add to the item pool 6 emeralds, 14 keys, 2 buff items (more on those in a moment), and 195 rings.
+- This world will add to the item pool 6 emeralds, 14 keys, 2 buff items (more on those in a moment), rings, and filler.
 - There are 6 keys for the normal zones, 1 for the Final Zone, 1 for Specials access, and 6 for the special stages themselves.
 - The player will start with the Specials access key and one random normal zone key unlocked, the remaining 12 are in the pool.
-- The 195 rings are split into 10 classed as Useful and 185 classed as Filler, the hope is that this will balance the distribution.
-- To complete the world you need to complete the 6 specials, 6 bosses, get the 6 emeralds in the pool, and 100 of the pool rings.
-- Initially there are no options, the number of rings to complete may get added as a difficulty modifier.
-- At 100 rings, in my tests using Pokemon red as a second world, you should be able to get enough rings by 100% clearing.
-- Keys can only appear in other worlds, to make filling slightly saner.
-- Universal Tracker is supported.
+- The 195 possible rings are split into 10 classed as Useful and 185 classed as Filler, the hope is that this will balance the distribution.
+- To complete the world you need to complete the 6 specials, 6 bosses, get the 6 emeralds in the pool, and some amount of the pool rings.
+- The number of rings added to the pool is set by an option, the remaining item slots will contain junk items.
 
 ## What changes to Sonic 1 you need to know about
 
@@ -39,6 +36,7 @@
 ## Setup
 
 - The supplied patch is applied against the Sonic 1 world REV0 release (`Sonic The Hedgehog (W) (REV00)`)
+- Downgrade patches are also supplied, if you need to turn REV1 into REV0.
 - The game state is tracked via SRAM, this includes the game seed to keep stale saves from messing up new runs.
 - It is recommended, if you have save data from a previous attempt, to use the `RESET SAVE` level select option before connecting to the server.
 - Resetting mid run will result in the client writing the progress that has been received from the AP server.

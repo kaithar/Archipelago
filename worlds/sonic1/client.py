@@ -277,11 +277,13 @@ class S1Client(BizHawkClient):
                         levelkeys |= [1,2,4,8,16,32,64,128][idx-9]
                     elif idx in range(17,23):
                         sskeys |= [1,2,4,8,16,32,64,128][idx-17]
+                    elif idx in [23,24]:
+                        ringcount += 1
                     elif idx >= constants.filler_base:
                         # Junk item... do nothing
                         pass
                     else:
-                        ringcount += 1
+                        logger.info(f"Received item {idx} and I don't know what it is.")
                 
                 if ctx.slot_data.get("hard_mode", 0):
                     ringcount = 0
