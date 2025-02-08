@@ -2,7 +2,7 @@ from Options import Toggle
 from worlds.sonic1 import constants
 from ..configurable import RingGoal
 from . import Sonic1TestBase
-from Fill import FillError
+from Fill import FillError, fill_restrictive
 
 # We're pretty much checking that the game will generate sanely with all the options
 
@@ -18,7 +18,8 @@ class TestFailure(Sonic1TestBase):
 
     def test_fill(self):
         """Test that fill raises an error when it can't place any items"""
-        self.assertRaises(FillError, super().test_fill)
+        self.assertRaises(FillError, fill_restrictive, self.multiworld, self.multiworld.state,
+                          [L for L in self.multiworld.worlds[1].get_locations()], self.multiworld.itempool.copy())
 
 class TestNoBuffs(Sonic1TestBase):
     """We want to make sure disabling the goal buff does what we expect"""
