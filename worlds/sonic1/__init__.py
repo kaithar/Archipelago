@@ -1,5 +1,4 @@
 import os
-import pkgutil
 from typing import ClassVar, List
 import typing
 
@@ -46,6 +45,14 @@ class Sonic1World(World):
     }
 
     web = Sonic1WebWorld()
+
+    def generate_early(self):
+        super().generate_early()
+        # So, we care about making this sane...
+        if self.options.ring_goal.value > self.options.available_rings.value:
+            # This is going to be really bad, so we correct that here
+            # Per the option description, ring_goal wins.
+            self.options.ring_goal.value = self.options.available_rings.value
 
     def create_item(self, name: str) -> Item:
         item = constants.item_by_name[name]
