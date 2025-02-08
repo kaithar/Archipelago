@@ -9,6 +9,7 @@
 - The pool rings are split into the goal count number of Shiny Rings (progression) and the remaining pool are Gold Rings (useful).  
 - To complete the world you need to beat the 6 specials, 6 bosses, get 6 emeralds in the pool, and some amount of the pool rings.
 - The number of rings added to the pool is set by an option, the remaining item slots will contain junk items.
+- You won't be able to enter any levels until the BizHawk client has connected to the AP server.  It needs to receive the room info.  You'll know because there will be no arrows lit up.
 
 ## Required Software
 
