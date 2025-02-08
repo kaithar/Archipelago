@@ -101,7 +101,7 @@ class SegaSRAM(object):
           patches = []
           for i,bs in enumerate(zip(self._raw, tempraw)):
               if bs[0] != bs[1]:
-                  logger.info(f"{i=} {bs=}")
+                  logger.debug(f"{i=} {bs=}")
                   patches.append([i,[bs[1]], "SRAM"])
           self._raw = tempraw
           await write(ctx.bizhawk_ctx,patches)
