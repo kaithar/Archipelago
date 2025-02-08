@@ -169,8 +169,13 @@ class Sonic1World(World):
         set_rule(mwge("Scrap Brain", self.player), lambda state: state.has("Scrap Brain Key", self.player))
         set_rule(mwge("Final Zone", self.player),  lambda state: state.has("Final Zone Key", self.player))
         set_rule(mwge("Special Stage 1", self.player), lambda state: state.has("Special Stages Key", self.player))
-        for ssid in range(1,7):
-            set_rule(mwge(f"Special Stage {ssid}", self.player), lambda state: state.has(f"Special Stage {ssid} Key", self.player))
+        set_rule(mwge("Special Stage 1", self.player), lambda state: state.has("Special Stage 1 Key", self.player))
+        set_rule(mwge("Special Stage 2", self.player), lambda state: state.has("Special Stage 2 Key", self.player))
+        set_rule(mwge("Special Stage 3", self.player), lambda state: state.has("Special Stage 3 Key", self.player))
+        set_rule(mwge("Special Stage 4", self.player), lambda state: state.has("Special Stage 4 Key", self.player))
+        set_rule(mwge("Special Stage 5", self.player), lambda state: state.has("Special Stage 5 Key", self.player))
+        set_rule(mwge("Special Stage 6", self.player), lambda state: state.has("Special Stage 6 Key", self.player))
+
         def completion_check(state: CollectionState):
             for c in constants.completion:
                 if not state.can_reach_location(c, self.player):
