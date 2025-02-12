@@ -3,6 +3,7 @@
 ## What you need to know about the Archipelago mode
 
 - The location checks for this game are every monitor, all six bosses and all six special zones.
+- Rings placed in the world are not checks, collect or ignore as you want.  All referenences to rings are talking about AP items.
 - This world will add to the item pool 6 emeralds, 14 keys, 2 buff items (more on those in a moment), rings, and filler.
 - There are 6 keys for the normal zones, 1 for the Final Zone, 1 for Specials access, and 6 for the special stages themselves.
 - The player will start with the Specials access key and one random normal zone key unlocked, the remaining 12 are in the pool.
@@ -24,7 +25,7 @@
 ## Tracker support
 
 - Universal Tracker is supported, just requires having both worlds on the same launcher.
-- Pop Tracker is supported, you can load the tracker directory or download the packaged .poptracker file.
+- Pop Tracker is supported, you can load the tracker directory or download the packaged .poptracker.zip file.
 
 Both have working auto tracking and map following, just connect to your AP game.
 
@@ -32,6 +33,9 @@ Both have working auto tracking and map following, just connect to your AP game.
 
 The generation options are suitably documented.  Some specific notes:
 - If you want to generate a solo world be sure that "No local key placement" isn't enabled.
+- Ring Goal specifies the number of ring items you need to collect from the item pool.
+- Available Rings specifies how many rings items are added to the item pool.
+- If Available is lower than the Goal, Ring Goal will be set to the value of Available Rings.
 - The Ring Goal won't pose much of a challenge in a normal game, you can tweak these settings to make things much harder.
 - The default difficulty is tuned to the assumption you will need to check most monitors in a reasonable amount of time.
 - The Boring Filler option is there to disable the joke filler items.  All (non-functional) junk items have "(Junk)" in the name.
