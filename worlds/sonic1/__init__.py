@@ -11,7 +11,7 @@ from BaseClasses import CollectionState, Entrance, Item, Region, Tutorial
 from . import constants, configurable, client, locations  # noqa: F401
 
 class Sonic1WebWorld(WebWorld):
-    option_groups = [configurable.ring_options,configurable.special_generics]
+    option_groups = [configurable.ring_options,configurable.pow_options,configurable.special_generics]
     tutorials = [Tutorial(
         "Sonic 1 Setup Guide", "A short guide to setting up Sonic 1 for Archipelago",
         "English", "setup_en.md", "setup/en", ["Kaithar"])]
@@ -59,10 +59,33 @@ class Sonic1World(World):
         return locations.S1Item(name, getattr(BaseClasses.ItemClassification,item.itemclass), item.id, self.player)
 
     def create_items(self) -> None:
-        local_items = ["Special Stages Key", self.random.choice(constants.possible_starters)]
         item_prep = constants.core_items.copy()
         to_push: typing.List[typing.List] = []
         to_keep: typing.List[typing.List] = []
+        local_items = []
+        remaining_keys = constants.possible_starters.copy()
+        have_key = False
+        for item in self.options.start_inventory:
+            if item in constants.possible_starters:
+                remaining_keys.remove(item)
+                have_key = True
+        for item in self.options.starting_zone:
+            #print(f"{item=}")
+            if len(remaining_keys) == 0:
+                break
+            if item == "Random":
+                have_key = True
+                where = self.random.choice(remaining_keys)
+                remaining_keys.remove(where)
+                local_items.append(where)
+            elif item in remaining_keys:
+                have_key = True
+                remaining_keys.remove(item)
+                local_items.append(item)
+        if not have_key:
+            local_items.append(self.random.choice(constants.possible_starters))
+        if "Special Stages Key" not in self.options.start_inventory:
+            local_items.append("Special Stages Key")
 
         if self.options.allow_disable_goal:
             item_prep.append(constants.goal_item)
@@ -70,6 +93,8 @@ class Sonic1World(World):
             item_prep.append(constants.r_item)
 
         for item in item_prep:
+            if item[0] in constants.exactly_one and item[0] in self.options.start_inventory:
+                continue
             if item[0] in local_items:
                 to_keep.append(item)
             else:
@@ -78,6 +103,15 @@ class Sonic1World(World):
         requested_rings = self.options.available_rings.value - self.options.ring_goal.value
         to_push.extend([constants.prog_ring]*self.options.ring_goal.value)
         to_push.extend([constants.fill_ring]*requested_rings)
+
+        sspow = constants.speeds_bad if self.options.pow_ss_trap_flag else constants.speeds_pup
+        # Can we fit the requested powerups?
+        for (k,v) in [(constants.invinc_pup, self.options.pow_invinc),
+                    (constants.shield_pup, self.options.pow_shield),
+                    (sspow, self.options.pow_speeds)]:
+            filler_needed = constants.location_total - len(to_push)
+            ps = min(v, filler_needed)
+            to_push.extend([k]*ps)
 
         filler_needed = constants.location_total - len(to_push)
         if not self.options.boring_filler:
@@ -135,6 +169,8 @@ class Sonic1World(World):
            mo = locations.S1Boss(self.player, b, r)
            exclusion_locations.append(mo)
            r.locations.append(mo)
+           # I'm nice, so I'm going to prevent power ups being added as boss drops...
+           add_item_rule(mo, lambda item: item.name not in constants.power_up_names)
         # And Specials...
         specials: List[locations.S1Region] = []
         for ssid in range(1,7):
@@ -150,6 +186,8 @@ class Sonic1World(World):
             e.connect(r)
             mo = locations.S1Special(self.player, constants.special_by_idx[ssid], r)
             exclusion_locations.append(mo)
+            # Let's exclude power ups from special stage drops too
+            add_item_rule(mo, lambda item: item.name not in constants.power_up_names)
             r.locations.append(mo)
             specials.append(r)
         
@@ -188,9 +226,10 @@ class Sonic1World(World):
 
     def generate_output(self, output_directory: str) -> None:
         patch = configurable.Sonic1ProcedurePatch(player=self.player, player_name=self.player_name)
+        #print(f"{self.player=}, {self.multiworld.player_name[self.player]=}")
         out_file_name = self.multiworld.get_out_file_name_base(self.player)
         patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
 
     def fill_slot_data(self):
-        return self.options.as_dict("hard_mode","ring_goal")
+        return self.options.as_dict("hard_mode","ring_goal", "send_death", "recv_death")
 

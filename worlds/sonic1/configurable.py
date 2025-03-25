@@ -5,6 +5,7 @@ import pkgutil
 import typing
 
 import bsdiff4
+from ordered_set import OrderedSet
 import Utils
 from worlds.Files import APPatchExtension, APProcedurePatch
 
@@ -135,15 +136,52 @@ class AvailableRings(Range):
     """Dr Eggman attacked, how many rings fell into the pool for you to recover?  Will cap Ring Goal."""
     display_name = "Number of rings sent to the pool"
     range_start = 0
-    range_end = 185
-    default = 185
+    range_end = 150
+    default = 150
 
 class BoringFiller(Toggle):
     """Enable to take the fun out of the junk filler items"""
     display_name = "Boring filler items"
     default = False
 
+class SendDeathLink(Toggle):
+    """Enable this to send DeathLink"""
+    display_name = "Send DeathLink"
+    default = False
+
+class RecvDeathLink(Toggle):
+    """Enable this to receive DeathLink"""
+    display_name = "Receive DeathLink"
+    default = False
+
+class SpeedyTrap(Toggle):
+    """Do you consider Speed Shoes a trap?"""
+    display_name = "Mark Speed Shoes as trap"
+    default = True
+
+class PowInvinc(Range):
+    """Trigger Invincibility power-up"""
+    display_name = "How many Invincibility power-ups?"
+    range_start = 0
+    range_end = 16
+    default = 5
+
+class PowShield(Range):
+    """Trigger Shield power-up"""
+    display_name = "How many Shield power-ups?"
+    range_start = 0
+    range_end = 16
+    default = 5
+
+class PowSpeedShoes(Range):
+    """Trigger Speed Shoes power-up"""
+    display_name = "How many Speed Shoes power-ups?"
+    range_start = 0
+    range_end = 16
+    default = 5
+
 ring_options = OptionGroup("Ring Options",[AvailableRings,RingGoal,HardMode,BoringFiller])
+pow_options = OptionGroup("Power-up options", [PowInvinc, PowShield, PowSpeedShoes, SpeedyTrap])
 
 valid_item_keys = [item[0] for item in constants.items if item[2] != "filler"]
 
@@ -163,10 +201,18 @@ class WorthWhileStartHint(Options.StartHints):
     __doc__ = Options.StartHints.__doc__
     valid_keys = valid_item_keys
 
+class StartingZone(Options.OptionSet):
+    """Specifies which zone keys are given for free"""
+    default = {"Random"}
+    display_name = "Starting keys"
+    convert_name_groups = False
+    valid_keys = OrderedSet(["Random"]+constants.possible_starters)
+
 special_generics = OptionGroup("Item & Location Options", [WorthWhileLocal, WorthWhileNonLocal, WorthWhileStart, WorthWhileStartHint], True)
 
 @dataclass
 class Sonic1GameOptions(PerGameCommonOptions):
+    starting_zone: StartingZone
     no_local_keys: NoLocalKeys
     allow_disable_goal: AllowDisableGoal
     allow_disable_r: AllowDisableR
@@ -178,4 +224,11 @@ class Sonic1GameOptions(PerGameCommonOptions):
     non_local_items: WorthWhileNonLocal
     start_inventory: WorthWhileStart
     start_hints: WorthWhileStartHint
+    pow_invinc: PowInvinc
+    pow_shield: PowShield
+    pow_speeds: PowSpeedShoes
+    pow_ss_trap_flag: SpeedyTrap
+    send_death: SendDeathLink
+    recv_death: RecvDeathLink
+
 

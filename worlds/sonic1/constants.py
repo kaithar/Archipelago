@@ -1,5 +1,6 @@
 from collections import namedtuple
 from typing import Dict, List
+from . import sram
 
 id_base = 3141501000
 
@@ -328,7 +329,7 @@ emeralds = ["Blue Emerald (#1)", "Yellow Emerald (#2)", "Pink Emerald (#3)",
             "Green Emerald (#4)", "Red Emerald (#5)", "Grey Emerald (#6)"]
 
 items = []
-core_items = [
+core_items: list[list[str,int,str]] = [
     [emeralds[0],           1, "progression"],
     [emeralds[1],           2, "progression"],
     [emeralds[2],           3, "progression"],
@@ -358,6 +359,9 @@ items.extend([goal_item,r_item])
 
 possible_starters = [ "Green Hill Key", "Marble Zone Key", "Spring Yard Key", "Labyrinth Key", "Starlight Key", "Scrap Brain Key"]
 
+exactly_one = [i[0] for i in core_items]
+exactly_one.extend(["Disable GOAL blocks", "Disable R blocks"])
+
 # Specials and Emeralds cancel out. Bosses and special keys cancel.
 # 196 monitors vs 2 buffs+8 zones, 186 rings needed
 # Except... the dummy key and one of the 6 proper zone keys are prefilled, so we need an extra 2 rings
@@ -366,7 +370,16 @@ prog_ring = ["Shiny Ring", 23, "progression"]
 fill_ring = ["Gold Ring", 24, "useful"]
 items.extend([prog_ring, fill_ring])
 
-filler_base = 22+location_total
+#power ups...
+invinc_pup = ["Invincibility", 25, "useful"]
+shield_pup = ["Shield",        26, "useful"]
+speeds_pup = ["Great Speed Shoes", 27, "useful"]
+speeds_bad = ["Scary Speed Shoes", 28, "trap"]
+power_ups = [invinc_pup, shield_pup, speeds_pup, speeds_bad]
+items.extend(power_ups)
+power_up_names = [p[0] for p in power_ups]
+
+filler_base = 100
 
 silly_filler = [[f"{n} (Junk)", filler_base+i, "filler"] for i,n in enumerate([
     "Fresh Chilli Dogs", "Couple of Grumpy Flickies", "Plastic Souvenir Ring", "Genuine Signed Prop Ring",
@@ -378,7 +391,7 @@ silly_filler = [[f"{n} (Junk)", filler_base+i, "filler"] for i,n in enumerate([
     "Mass Produced Treasure Map", "Missing Collision Geometry", "Ford's Spare Towel", "1:10 Scale Lockpicks", 
     "Death Egg Purchase Receipt", "Casino Night Zone's Gambling Permit", "10 duplicate Sonic TCG cards", "Defective Spring",
     "Eggman's Refurbished Missile", "Morph Ball", "Electronic Device Marked Critical", "Dereferenced Null Pointer", 
-    "Plastic Chaos Emerald", "Empty Iron Bru Bottle", "Additional Pylons"
+    "Plastic Chaos Emerald", "Empty Iron Bru Bottle", "Additional Pylons", "Reticulated Splines"
 ])]
 items.extend(silly_filler)
 
@@ -481,3 +494,28 @@ level_bytes = {
     b"\x01\x03": 18, # SBZ3
     b"\x05\x02": 25, # FZ
 }
+
+# For the SegaSRAM class.  Counts are 1 unless specified
+# Comments contain the sizes from the ROM which are twice the size due to sram layout
+class S1Layout(sram.BigEndian):
+    SR_Head: bytes         = sram.ParseField('4s')     # 4 byte string, ds.l 2
+    SR_Monitors: list[int] = sram.ParseField('B', 196) # list of 196 single byte values, ds.w 196
+    SR_Specials: int   = sram.ParseField('B')       # ds.w 1
+    SR_Emeralds: int   = sram.ParseField('B')          # ds.w 1
+    SR_Bosses: int     = sram.ParseField('B')     # ds.w 1
+    SR_BuffGoals: int  = sram.ParseField('B')          # ds.w 1
+    SR_BuffDisR: int   = sram.ParseField('B')          # ds.w 1
+    SR_RingsFound: int = sram.ParseField('B')          # ds.w 1
+    SR_LevelGate: int  = sram.ParseField('B')          # ds.w 1
+    SR_SSGate: int     = sram.ParseField('B')          # ds.w 1
+    SR_Invinc_in: int  = sram.ParseField('B')          # ds.w 1
+    SR_Invinc_out: int = sram.ParseField('B')          # ds.w 1
+    SR_Shield_in: int  = sram.ParseField('B')          # ds.w 1
+    SR_Shield_out: int = sram.ParseField('B')          # ds.w 1
+    SR_SpeedS_in: int  = sram.ParseField('B')          # ds.w 1
+    SR_SpeedS_out: int = sram.ParseField('B')          # ds.w 1
+    SR_DeathL_in: int  = sram.ParseField('B')          # ds.w 1
+    SR_DeathL_out: int = sram.ParseField('B')          # ds.w 1
+    SR_Deaths: int     = sram.ParseField('B')          # ds.w 1
+    SR_Seed: bytes     = sram.ParseField('20s')        # 20 byte string, ds.w $20
+    SR_Slot: int       = sram.ParseField('B')          # ds.w 1
