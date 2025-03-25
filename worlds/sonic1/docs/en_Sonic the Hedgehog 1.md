@@ -40,6 +40,28 @@ The generation options are suitably documented.  Some specific notes:
 - The default difficulty is tuned to the assumption you will need to check most monitors in a reasonable amount of time.
 - The Boring Filler option is there to disable the joke filler items.  All (non-functional) junk items have "(Junk)" in the name.
 
+Example YAML:
+```yaml
+Sonic the Hedgehog 1:
+  starting_zone:
+    ['Green Hill Key', 'Random']
+  # Restrict local placement rules to force this world's keys to be placed in other worlds.
+  no_local_keys: false
+  # Enable the buff items
+  allow_disable_goal: true
+  allow_disable_r: true
+  available_rings: 150
+  ring_goal: 100
+  hard_mode: false
+  boring_filler: false
+  pow_invinc: 5
+  pow_shield: 5
+  pow_speeds: 5
+  pow_ss_trap_flag: false
+  send_death: true
+  recv_death: true
+```
+
 ## What changes to Sonic 1 you need to know about
 
 - Progression:
@@ -67,3 +89,11 @@ The generation options are suitably documented.  Some specific notes:
     - You don't gain extra lives for 100 rings, but you can't lose lives either.
     - Completing a stage with 50 rings won't spawn a giant ring due to progression gating.
     - Completing acts 2 or 3 of Scrap Brain won't advance you to the next zone.
+
+## FAQ
+
+- If the log says the seeds don't match, navigate down to Reset Save and choose it, that'll reset the SRAM for the client to redo setup.
+- If the log isn't giving messages and you still don't have the starting keys, make sure you're connected to the server.
+- Using the disconnect/connect button in the Bizhawk Client to reconnect without closing Bizhawk might help if the initial setup failed.
+- If you're still having issues, please provide a screenshot of the log window to Discord.
+- Yes, the monitor in credits is known and intentional... it's an easter egg.
