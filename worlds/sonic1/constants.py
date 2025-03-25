@@ -395,7 +395,7 @@ silly_filler = [[f"{n} (Junk)", filler_base+i, "filler"] for i,n in enumerate([
 ])]
 items.extend(silly_filler)
 
-boring_filler = ["Space intentionally left blank (Junk)", filler_base+len(silly_filler), "filler"]
+boring_filler = ["Space intentionally left blank (Junk)", 99, "filler"]
 items.append(boring_filler)
 
 item_name_groups: Dict[str,set[str]] = {

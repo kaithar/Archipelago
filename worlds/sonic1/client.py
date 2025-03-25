@@ -245,7 +245,7 @@ class S1Client(BizHawkClient):
                         shield += 1
                     elif idx in [27,28]:
                         speeds += 1
-                    elif idx >= constants.filler_base:
+                    elif idx >= constants.filler_base-1:
                         # Junk item... do nothing
                         pass
                     else:
