@@ -40,26 +40,35 @@ The generation options are suitably documented.  Some specific notes:
 - The default difficulty is tuned to the assumption you will need to check most monitors in a reasonable amount of time.
 - The Boring Filler option is there to disable the joke filler items.  All (non-functional) junk items have "(Junk)" in the name.
 
-Example YAML:
+Example YAML using default values:
 ```yaml
 Sonic the Hedgehog 1:
+  # Add extra keys by name, eg: 'Green Hill Key'
   starting_zone:
-    ['Green Hill Key', 'Random']
+    ['Random']
   # Restrict local placement rules to force this world's keys to be placed in other worlds.
   no_local_keys: false
   # Enable the buff items
   allow_disable_goal: true
   allow_disable_r: true
+  # Number of rings sent to the pool
   available_rings: 150
+  # Number of rings you need from the pool for victory
   ring_goal: 100
+  # When enabled, AP won't give you safety rings and you only drop 6 when hurt.
   hard_mode: false
+  # Enable to remove the fun junk items
   boring_filler: false
+  # How many of each powerup to put in pool, set to 0 to disable completely
   pow_invinc: 5
   pow_shield: 5
   pow_speeds: 5
-  pow_ss_trap_flag: false
-  send_death: true
-  recv_death: true
+  # When enabled the speed shoes are filled as a trap item instead of a useful item.
+  pow_ss_trap_flag: true
+  # Enable this to send deathlink packets when you die
+  send_death: false
+  # Enable this to die when deathlink packets are received
+  recv_death: false
 ```
 
 ## What changes to Sonic 1 you need to know about
