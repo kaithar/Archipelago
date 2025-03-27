@@ -69,7 +69,7 @@ class Sonic1World(World):
             if item in constants.possible_starters:
                 remaining_keys.remove(item)
                 have_key = True
-        for item in self.options.starting_zone:
+        for item in self.options.starting_zone.value:
             #print(f"{item=}")
             if len(remaining_keys) == 0:
                 break
