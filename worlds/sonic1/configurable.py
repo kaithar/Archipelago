@@ -2,7 +2,6 @@ from dataclasses import dataclass
 import hashlib
 import os
 import pkgutil
-import typing
 
 import bsdiff4
 import Utils
@@ -11,7 +10,7 @@ from worlds.Files import APPatchExtension, APProcedurePatch
 from settings import get_settings
 import settings
 import Options
-from Options import CommonOptions, DefaultOnToggle, NamedRange, OptionGroup, Toggle, Range, PerGameCommonOptions
+from Options import DefaultOnToggle, NamedRange, OptionGroup, Toggle, Range, PerGameCommonOptions
 
 from . import constants
 
