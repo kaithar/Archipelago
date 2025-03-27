@@ -5,7 +5,6 @@ import pkgutil
 import typing
 
 import bsdiff4
-from ordered_set import OrderedSet
 import Utils
 from worlds.Files import APPatchExtension, APProcedurePatch
 
@@ -206,7 +205,7 @@ class StartingZone(Options.OptionSet):
     default = {"Random"}
     display_name = "Starting keys"
     convert_name_groups = False
-    valid_keys = OrderedSet(["Random"]+constants.possible_starters)
+    valid_keys = list(["Random"]+constants.possible_starters)
 
 special_generics = OptionGroup("Item & Location Options", [WorthWhileLocal, WorthWhileNonLocal, WorthWhileStart, WorthWhileStartHint], True)
 
