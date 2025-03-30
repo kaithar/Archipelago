@@ -24,6 +24,9 @@ class S1Client(BizHawkClient):
             ctx.game = self.game
             ctx.items_handling = 0b111
             ctx.finished_game = False
+            if "server_seed_name" not in ctx.__dict__:
+                # Probably running on 0.5.1?
+                ctx.server_seed_name = None
             if ctx.server_seed_name:
                 ctx.remote_seed_name = f"{ctx.server_seed_name[-20:]:20}"
                 if len(ctx.locations_checked) != 0:
