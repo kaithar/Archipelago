@@ -110,19 +110,17 @@
   "tracker_items": {"type": "itemgrid", "rows": [[
     "Green Hill Key", "Marble Zone Key", "Spring Yard Key", "Labyrinth Key",      
     "Starlight Key",  "Scrap Brain Key", "Final Zone Key","",
-    "Special Stage 1 Key", "Blue Emerald (#1)", "Special Stage 2 Key", "Yellow Emerald (#2)",
-    "Special Stage 3 Key", "Pink Emerald (#3)", "Special Stage 4 Key", "Green Emerald (#4)",
-    "Special Stage 5 Key", "Red Emerald (#5)",  "Special Stage 6 Key", "Grey Emerald (#6)",
-    "","Disable GOAL blocks","Disable R blocks"
+    "Blue Emerald (#1)",  "Yellow Emerald (#2)", "Pink Emerald (#3)",
+    "Green Emerald (#4)", "Red Emerald (#5)",    "Grey Emerald (#6)",
+    "","Special Stage Key","Disable GOAL blocks","Disable R blocks"
   ]]},
   "tracker_broadcast": {"type": "container", "content": {
     "type": "itemgrid", "rows": [
       ["Green Hill Key", "Marble Zone Key", "Spring Yard Key", "Labyrinth Key",      
        "Starlight Key",  "Scrap Brain Key", "Final Zone Key"],
-      ["Special Stage 1 Key", "Blue Emerald (#1)", "Special Stage 2 Key", "Yellow Emerald (#2)",
-       "Special Stage 3 Key", "Pink Emerald (#3)", "Special Stage 4 Key", "Green Emerald (#4)"],
-      ["Special Stage 5 Key", "Red Emerald (#5)",  "Special Stage 6 Key", "Grey Emerald (#6)","",
-       "Disable GOAL blocks","Disable R blocks",""]
+      ["Blue Emerald (#1)",  "Yellow Emerald (#2)", "Pink Emerald (#3)",
+       "Green Emerald (#4)", "Red Emerald (#5)",    "Grey Emerald (#6)"],
+      ["","Special Stage Key","Disable GOAL blocks","Disable R blocks",""]
     ]
   }}
 }

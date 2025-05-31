@@ -4205,7 +4205,7 @@
                     {
                         "name": "Final Zone Boss",
                         "access_rules": [
-                            "Final Zone Key"
+                            "$fzOpenCheck"
                         ]
                     }
                 ]
@@ -4215,7 +4215,7 @@
     {
         "name": "Special Stage 1",
         "access_rules": [
-            "Special Stage 1 Key"
+            "$ssKeyCheck|1"
         ],
         "map_locations": [
             {
@@ -4232,9 +4232,8 @@
     },
     {
         "name": "Special Stage 2",
-        "parent": "Special Stage 1",
         "access_rules": [
-            "Special Stage 1 Key,Special Stage 2 Key"
+            "$ssKeyCheck|2"
         ],
         "map_locations": [
             {
@@ -4251,9 +4250,8 @@
     },
     {
         "name": "Special Stage 3",
-        "parent": "Special Stage 2",
         "access_rules": [
-            "Special Stage 1 Key,Special Stage 2 Key,Special Stage 3 Key"
+            "$ssKeyCheck|3"
         ],
         "map_locations": [
             {
@@ -4270,9 +4268,8 @@
     },
     {
         "name": "Special Stage 4",
-        "parent": "Special Stage 3",
         "access_rules": [
-            "Special Stage 1 Key,Special Stage 2 Key,Special Stage 3 Key,Special Stage 4 Key"
+            "$ssKeyCheck|4"
         ],
         "map_locations": [
             {
@@ -4289,9 +4286,8 @@
     },
     {
         "name": "Special Stage 5",
-        "parent": "Special Stage 4",
         "access_rules": [
-            "Special Stage 1 Key,Special Stage 2 Key,Special Stage 3 Key,Special Stage 4 Key,Special Stage 5 Key"
+            "$ssKeyCheck|5"
         ],
         "map_locations": [
             {
@@ -4308,9 +4304,8 @@
     },
     {
         "name": "Special Stage 6",
-        "parent": "Special Stage 5",
         "access_rules": [
-            "Special Stage 1 Key,Special Stage 2 Key,Special Stage 3 Key,Special Stage 4 Key,Special Stage 5 Key,Special Stage 6 Key"
+            "$ssKeyCheck|6"
         ],
         "map_locations": [
             {

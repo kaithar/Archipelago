@@ -18,18 +18,15 @@ Tracker:FindObjectForCode("labyrinthkey"):SetOverlay("LZ")
 Tracker:FindObjectForCode("starlightkey"):SetOverlay("SLZ")
 Tracker:FindObjectForCode("scrapbrainkey"):SetOverlay("SBZ")
 Tracker:FindObjectForCode("finalzonekey"):SetOverlay("FZ")
-Tracker:FindObjectForCode("specialstage1key"):SetOverlay("Sp1")
-Tracker:FindObjectForCode("specialstage2key"):SetOverlay("Sp2")
-Tracker:FindObjectForCode("specialstage3key"):SetOverlay("Sp3")
-Tracker:FindObjectForCode("specialstage4key"):SetOverlay("Sp4")
-Tracker:FindObjectForCode("specialstage5key"):SetOverlay("Sp5")
-Tracker:FindObjectForCode("specialstage6key"):SetOverlay("Sp6")
+Tracker:FindObjectForCode("specialstagekey"):SetOverlay("SS")
 
 CUR_INDEX = -1
 --SLOT_DATA = nil
 
 SLOT_DATA = {}
 AREA_KEY = ""
+BOSS_KEY = ""
+BOSS_DATA = nil
 
 function has_value (t, val)
     for i, v in ipairs(t) do
@@ -92,7 +89,6 @@ function onClearHandler(slot_data)
 end
 
 function onClear(slot_data)
-    --SLOT_DATA = slot_data
     CUR_INDEX = -1
     -- reset locations
     for _, location_array in pairs(LOCATION_MAPPING) do
@@ -118,6 +114,7 @@ function onClear(slot_data)
     PLAYER_ID = Archipelago.PlayerNumber or -1
     TEAM_NUMBER = Archipelago.TeamNumber or 0
     SLOT_DATA = slot_data
+    print(dump_table(SLOT_DATA))
     -- if Tracker:FindObjectForCode("autofill_settings").Active == true then
     --     autoFill(slot_data)
     -- end
@@ -130,6 +127,9 @@ function onClear(slot_data)
         AREA_KEY = string.format("%s_%s_sonic1_area", PLAYER_ID, TEAM_NUMBER)
         Archipelago:SetNotify({AREA_KEY})
         Archipelago:Get({AREA_KEY})
+        BOSS_KEY = string.format("%s_%s_sonic1_bosses", PLAYER_ID, TEAM_NUMBER)
+        Archipelago:SetNotify({BOSS_KEY})
+        Archipelago:Get({BOSS_KEY})
     end
 end
 
@@ -150,10 +150,54 @@ function onItem(index, item_id, item_name, player_number)
       if item_obj.Type == "toggle" then
         -- print("toggle")
         item_obj.Active = true
+      elseif item_obj.Type == "consumable" then
+        -- print("toggle")
+        item_obj.AcquiredCount = item_obj.AcquiredCount + 1
       end
     else
         print(string.format("onItem: could not find object for code %s", item_code[1]))
     end
+end
+
+function ssKeyCheck(howmany)
+    local item_obj = Tracker:FindObjectForCode("Special Stage Key")
+    if item_obj then
+      if item_obj.AcquiredCount >= tonumber(howmany) then
+        return true
+      end
+    else
+      print(string.format("onItem: could not find object for code %s", item_code[1]))
+    end
+    return false
+end
+
+function fzOpenCheck()
+    local item_obj = Tracker:FindObjectForCode("Final Zone Key")
+    if item_obj and item_obj.Active == true then
+      if SLOT_DATA["final_zone_last"] == 0 then
+        return true
+      else
+        local ems = 0
+        for _,em in pairs({Tracker:FindObjectForCode("blueemerald(#1)"),
+                           Tracker:FindObjectForCode("yellowemerald(#2)"),
+                           Tracker:FindObjectForCode("pinkemerald(#3)"),
+                           Tracker:FindObjectForCode("greenemerald(#4)"),
+                           Tracker:FindObjectForCode("redemerald(#5)"),
+                           Tracker:FindObjectForCode("greyemerald(#6)")}) do
+          if em.Active == true then ems = ems + 1 end
+        end
+        if ems < SLOT_DATA["emerald_goal"] then return false end
+        if (Tracker:FindObjectForCode("Gold Ring").AcquiredCount +
+            Tracker:FindObjectForCode("Shiny Ring").AcquiredCount) < SLOT_DATA["ring_goal"] then
+          return false
+        end
+        if BOSS_DATA and BOSS_DATA + 1 < SLOT_DATA["boss_goal"] then return false end
+        return true
+      end
+    else
+      print("Could not find active FZ key")
+    end
+    return false
 end
 
 --called when a location gets cleared
@@ -221,7 +265,7 @@ end
 
 function onNotify(key, value, old_value)
     print("onNotify", key, value, old_value)
-    if value ~= old_value and key == HINTS_ID then
+--[[     if value ~= old_value and key == HINTS_ID then
         for _, hint in ipairs(value) do
             if hint.finding_player == Archipelago.PlayerNumber then
                 if hint.found then
@@ -231,18 +275,25 @@ function onNotify(key, value, old_value)
                 end
             end
         end
-    end
+    end ]]
     if key == AREA_KEY then
       Tracker:UiHint("ActivateTab", AREA_MAPPING[value][1])
       if AREA_MAPPING[value][2] then
           Tracker:UiHint("ActivateTab", AREA_MAPPING[value][2])
+      end
+    elseif key == BOSS_KEY then
+      BOSS_DATA = 0
+      if value then
+        for _,bit in pairs({1,2,4,8,16,32}) do
+          if value&bit == bit then BOSS_DATA = BOSS_DATA + 1 end
+        end
       end
     end
 end
 
 function onNotifyLaunch(key, value)
     print("onNotifyLaunch", key, value)
-    if key == HINTS_ID then
+--[[     if key == HINTS_ID then
         for _, hint in ipairs(value) do
             print("hint", hint, hint.fount)
             print(dump_table(hint))
@@ -254,11 +305,18 @@ function onNotifyLaunch(key, value)
                 end
             end
         end
-    end
+    end ]]
     if key == AREA_KEY then
       Tracker:UiHint("ActivateTab", AREA_MAPPING[value][1])
       if AREA_MAPPING[value][2] then
           Tracker:UiHint("ActivateTab", AREA_MAPPING[value][2])
+      end
+    elseif key == BOSS_KEY then
+      BOSS_DATA = 0
+      if value then
+        for _,bit in pairs({1,2,4,8,16,32}) do
+          if value&bit == bit then BOSS_DATA = BOSS_DATA + 1 end
+        end
       end
     end
 end
