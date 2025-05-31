@@ -9,7 +9,6 @@ from collections import namedtuple
 import logging
 import struct
 import typing
-from worlds._bizhawk import read, write
 logger = logging.getLogger("Client")
 
 class ParseField(object):
@@ -100,12 +99,14 @@ class SegaSRAM(object):
     extra_data: typing.List[bytes]
     field_table: list[FieldRecord]
     field_map: dict[str,FieldRecord]
+    _read_callable: typing.Callable
+    _write_callable: typing.Callable
 
     _struct_type_map = {'x': None, 'c': int, 'b': int, 'B': int, '?': bool,
     'h': int, 'H': int, 'i': int, 'I': int, 'l': int, 'L': int, 'q': int, 'Q': int,
     'n': int, 'N': int, 'e': float, 'f': float, 'd': float, 's': bytes, 'p': bytes, 'P': int}
 
-    def __init__(self, ram_type=0):
+    def __init__(self, read_callable, write_callable, ram_type=0):
         '''Ram_type 0 for even addresses (FF__), 1 for odd addresses (__FF), 2 for both (FFFF)'''
         self._raw = []
         self.ram_type = ram_type
@@ -113,6 +114,8 @@ class SegaSRAM(object):
         self.extra_addresses = []
         self.extra_data = []
         self._fieldproxy = _fields_proxy(self)
+        self._read_callable = read_callable
+        self._write_callable = write_callable
 
     @property
     def fields(self):
@@ -166,7 +169,7 @@ class SegaSRAM(object):
         addresses.append((address*2, magic_len, "SRAM"))
         # Maybe it's 16-bit?
         addresses.append((address-address_odd, len(magic)+address_odd+magic_odd, "SRAM"))
-        data = await read(ctx.bizhawk_ctx, addresses)
+        data = await self._read_callable(ctx.bizhawk_ctx, addresses)
         # Now to test ways of mangling that
         tests.append((bytes([data[0][i] for i in range(0,len(data[0]), 2)]), 0)) # even bytes, include dead
         tests.append((bytes([data[0][i] for i in range(1,len(data[0]), 2)]), 1)) # odd bytes, include dead
@@ -192,7 +195,7 @@ class SegaSRAM(object):
     async def read_bytes(self, ctx, clear_stage=True):
         if clear_stage:
             self.staged = []
-        data = await read(ctx.bizhawk_ctx, [(0x0, self.byte_count, "SRAM"),]+self.extra_addresses)
+        data = await self._read_callable(ctx.bizhawk_ctx, [(0x0, self.byte_count, "SRAM"),]+self.extra_addresses)
         self._raw = data[0]
         self.extra_data = data[1:]
         # Because of 8bit sram stupidity, we're probably going to need to unpack this by dropping every other byte.
@@ -234,7 +237,7 @@ class SegaSRAM(object):
             for i in range(0,len(self.clean_data), 2):
               wrdata.extend([self.clean_data[i+1],self.clean_data[i]])
         self._raw = bytes(wrdata)
-        await write(ctx.bizhawk_ctx, [(0, wrdata, "SRAM")])
+        await self._write_callable(ctx.bizhawk_ctx, [(0, wrdata, "SRAM")])
 
     def stage(self, offset, data):
         for i in range(0,len(data)):
@@ -270,4 +273,4 @@ class SegaSRAM(object):
                   logger.debug(f"{i=} {bs=}")
                   patches.append([i,[bs[1]], "SRAM"])
           self._raw = tempraw
-          await write(ctx.bizhawk_ctx,patches)
+          await self._write_callable(ctx.bizhawk_ctx,patches)

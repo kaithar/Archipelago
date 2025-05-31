@@ -11,7 +11,9 @@ from BaseClasses import CollectionState, Entrance, Item, Region, Tutorial
 from . import constants, configurable, client, locations  # noqa: F401
 
 class Sonic1WebWorld(WebWorld):
-    option_groups = [configurable.ring_options,configurable.pow_options,configurable.special_generics]
+    option_groups = [
+        configurable.ring_options,configurable.pow_options,
+        configurable.special_generics, configurable.victory_conditions]
     tutorials = [Tutorial(
         "Sonic 1 Setup Guide", "A short guide to setting up Sonic 1 for Archipelago",
         "English", "setup_en.md", "setup/en", ["Kaithar"])]
@@ -29,6 +31,7 @@ class Sonic1World(World):
     item_name_to_id= constants.item_name_to_id
     location_name_to_id = constants.location_name_to_id
     item_name_groups = constants.item_name_groups
+    location_name_groups = constants.location_name_groups
 
     settings_key = "sonic1_settings"
     settings: ClassVar[configurable.Sonic1Settings]
@@ -53,6 +56,18 @@ class Sonic1World(World):
             # This is going to be really bad, so we correct that here
             # Per the option description, ring_goal wins.
             self.options.ring_goal.value = self.options.available_rings.value
+        if self.options.no_local_keys and self.multiworld.players == 1:
+            print("\nOnly one player, forcing no_local_keys to be off.")
+            self.options.no_local_keys.value = False
+        if (self.options.boss_goal.value == 0
+              and self.options.emerald_goal.value == 0
+              and self.options.specials_goal.value == 0
+              and self.options.ring_goal.value == 0):
+            print("\nAll completion goals set to 0.  Forcing a goal of 6 Emeralds to allow generation.")
+            self.options.emerald_goal.value = 6
+        if (self.options.final_zone_last.value == 2 and self.options.boss_goal.value == 0):
+            self.options.boss_goal.value = 1
+            print("\nFinal Zone Last set to Always, Boss goal set to 0.  Forcing Boss goal to 1.")
 
     def create_item(self, name: str) -> Item:
         item = constants.item_by_name[name]
@@ -84,8 +99,8 @@ class Sonic1World(World):
                 local_items.append(item)
         if not have_key:
             local_items.append(self.random.choice(constants.possible_starters))
-        if "Special Stages Key" not in self.options.start_inventory:
-            local_items.append("Special Stages Key")
+        if self.options.final_zone_last.value > 0:
+            local_items.append("Final Zone Key")
 
         if self.options.allow_disable_goal:
             item_prep.append(constants.goal_item)
@@ -104,6 +119,7 @@ class Sonic1World(World):
         to_push.extend([constants.prog_ring]*self.options.ring_goal.value)
         to_push.extend([constants.fill_ring]*requested_rings)
 
+        to_push.extend([constants.sskey]*6)
         sspow = constants.speeds_bad if self.options.pow_ss_trap_flag else constants.speeds_pup
         # Can we fit the requested powerups?
         for (k,v) in [(constants.invinc_pup, self.options.pow_invinc),
@@ -164,13 +180,19 @@ class Sonic1World(World):
         menu.exits.append(e)
         e.connect(r)
         # Setup the bosses...
+        boss_locs = {}
         for b in constants.boss_by_idx.values():
            r = regions[b.region]
            mo = locations.S1Boss(self.player, b, r)
            exclusion_locations.append(mo)
            r.locations.append(mo)
+           boss_locs[b.region] = mo
            # I'm nice, so I'm going to prevent power ups being added as boss drops...
            add_item_rule(mo, lambda item: item.name not in constants.power_up_names)
+        if self.options.final_zone_last > 0:
+            add_item_rule(boss_locs["Final Zone"],
+                          lambda item: (item.name not in constants.exactly_one
+                                    and item.name != constants.sskey[0]))
         # And Specials...
         specials: List[locations.S1Region] = []
         for ssid in range(1,7):
@@ -206,22 +228,43 @@ class Sonic1World(World):
         set_rule(mwge("Starlight", self.player),   lambda state: state.has("Starlight Key", self.player))
         set_rule(mwge("Scrap Brain", self.player), lambda state: state.has("Scrap Brain Key", self.player))
         set_rule(mwge("Final Zone", self.player),  lambda state: state.has("Final Zone Key", self.player))
-        set_rule(mwge("Special Stage 1", self.player), lambda state: state.has("Special Stages Key", self.player))
-        set_rule(mwge("Special Stage 1", self.player), lambda state: state.has("Special Stage 1 Key", self.player))
-        set_rule(mwge("Special Stage 2", self.player), lambda state: state.has("Special Stage 2 Key", self.player))
-        set_rule(mwge("Special Stage 3", self.player), lambda state: state.has("Special Stage 3 Key", self.player))
-        set_rule(mwge("Special Stage 4", self.player), lambda state: state.has("Special Stage 4 Key", self.player))
-        set_rule(mwge("Special Stage 5", self.player), lambda state: state.has("Special Stage 5 Key", self.player))
-        set_rule(mwge("Special Stage 6", self.player), lambda state: state.has("Special Stage 6 Key", self.player))
+        set_rule(mwge("Special Stage 1", self.player), lambda state: state.has("Special Stage Key", self.player, 1))
+        set_rule(mwge("Special Stage 2", self.player), lambda state: state.has("Special Stage Key", self.player, 2))
+        set_rule(mwge("Special Stage 3", self.player), lambda state: state.has("Special Stage Key", self.player, 3))
+        set_rule(mwge("Special Stage 4", self.player), lambda state: state.has("Special Stage Key", self.player, 4))
+        set_rule(mwge("Special Stage 5", self.player), lambda state: state.has("Special Stage Key", self.player, 5))
+        set_rule(mwge("Special Stage 6", self.player), lambda state: state.has("Special Stage Key", self.player, 6))
+
+        def common_checks(state: CollectionState, bosses_left=0):
+            bosses, specials, emeralds = 0,0,0
+            for c in constants.completion:
+                if state.can_reach_location(c, self.player):
+                    if "Boss" in c:
+                        bosses += 1
+                    else:
+                        specials += 1
+            if bosses < self.options.boss_goal.value-bosses_left or specials < self.options.specials_goal.value:
+                return False
+            for c in constants.emeralds:
+                if state.has(c,self.player):
+                    emeralds += 1
+            if emeralds < self.options.emerald_goal.value:
+                return False
+            return state.has_group("rings",self.player,self.options.ring_goal.value)
+
+        def FZ_reach(state: CollectionState):
+            if self.options.final_zone_last.value == 0:
+              return True
+            return common_checks(state, 1)
+
+        if self.options.final_zone_last.value > 0:
+            set_rule(mwge("Final Zone", self.player), FZ_reach)
 
         def completion_check(state: CollectionState):
-            for c in constants.completion:
-                if not state.can_reach_location(c, self.player):
-                    return False
-            for c in constants.emeralds:
-                if not state.has(c,self.player):
-                    return False
-            return state.has_group("rings",self.player,self.options.ring_goal.value)
+            if self.options.final_zone_last.value == 2 \
+               and not state.can_reach_location("Final Zone Boss", self.player):
+                  return False
+            return common_checks(state, 0)
         self.multiworld.completion_condition[self.player] = lambda state: completion_check(state)
 
     def generate_output(self, output_directory: str) -> None:
@@ -231,5 +274,6 @@ class Sonic1World(World):
         patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
 
     def fill_slot_data(self):
-        return self.options.as_dict("hard_mode","ring_goal", "send_death", "recv_death")
+        return self.options.as_dict("hard_mode","ring_goal", "send_death", "recv_death",
+                                    "boss_goal", "specials_goal", "emerald_goal", "final_zone_last")
 

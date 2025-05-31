@@ -1,7 +1,8 @@
 import logging
 
-from NetUtils import ClientStatus
+from NetUtils import ClientStatus, RawJSONtoTextParser
 from worlds._bizhawk.client import BizHawkClient
+from worlds._bizhawk import display_message, read, set_message_interval, write
 from . import constants
 from .sram import SegaSRAM
 
@@ -20,7 +21,7 @@ class S1Client(BizHawkClient):
     async def validate_rom(self, ctx):
         # loaded_hash = await get_hash(ctx.bizhawk_ctx)
         print(ctx.rom_hash)
-        if ctx.rom_hash == "2D9D4B93989FA9E7E365731A6CB3A4F89D4520D4": # Patched against known `Sonic The Hedgehog (W) (REV00)`
+        if ctx.rom_hash == "E74E98703EB01FAE49C9FB675C80480C18EB6FFB": # Patched against known `Sonic The Hedgehog (W) (REV00)`
             ctx.game = self.game
             ctx.items_handling = 0b111
             ctx.finished_game = False
@@ -38,7 +39,8 @@ class S1Client(BizHawkClient):
             else:
                 ctx.remote_seed_name = MAGIC_EMPTY_SEED
             ctx.rom_seed_name = MAGIC_EMPTY_SEED
-            self.sram_abstraction = SegaSRAM()
+            await set_message_interval(ctx.bizhawk_ctx, 0)
+            self.sram_abstraction = SegaSRAM(read, write)
             self.sram_abstraction.fields = constants.S1Layout
             # This will try to work out what byte order is in use.  Important because bizhawk has a byte swap issue
             await self.sram_abstraction.detect_type(ctx, magic=b'AS10')
@@ -48,6 +50,8 @@ class S1Client(BizHawkClient):
             ctx.curr_map = None
             ctx.my_stored_data = {}
             ctx.previous_deathlinks = set()
+            ctx.complained_about_seed = ""
+            ctx.messages = []
             return True
         return False
 
@@ -78,9 +82,9 @@ class S1Client(BizHawkClient):
             #logger.info(f"{cmd=} -> {args=}")
             for (k,v) in args["keys"].items():
               ctx.my_stored_data[k] = v if v else 0
-        #if cmd != "PrintJSON":
-        #    logger.info(f"{cmd=} -> {args=}")
-        #if cmd == "PrintJSON" and args["type"] in {}:
+        elif cmd == "PrintJSON":
+            ctx.messages.append(RawJSONtoTextParser(ctx)(args["data"]))
+            #logger.info(f"{cmd=} -> {args=}... {s=}")
         super().on_package(ctx, cmd, args)
 
     async def game_watcher(self, ctx):
@@ -106,6 +110,10 @@ class S1Client(BizHawkClient):
              or getattr(ctx,"slot_data",None) is None):
             return
         
+        if ctx.messages:
+            s = ctx.messages.pop(0)
+            await display_message(ctx.bizhawk_ctx, s)
+
         if self.sram_abstraction.extra_data[0] == b"\x0C": # Level mode
             # This fixes the oddity of the game switching to GHZ1 for special stage conclusion:
             if ctx.curr_map not in range(19,25):
@@ -132,7 +140,7 @@ class S1Client(BizHawkClient):
 
         cleanslate = False
         missing = []
-        for key in ["invinc_out", "shield_out", "speeds_out", "deathl_in", "deathl_out", "deaths"]:
+        for key in ["invinc_out", "shield_out", "speeds_out", "deathl_in", "deathl_out", "deaths", "bosses"]:
           key = f"{ctx.slot}_{ctx.team}_sonic1_{key}"
           if key not in ctx.my_stored_data:
             ctx.my_stored_data[key] = -1
@@ -188,33 +196,24 @@ class S1Client(BizHawkClient):
                         #logger.info(f"{constants.monitor_by_idx[i]} {broken} != {checked}")
                         ctx.locations_checked.add(constants.id_base+i) # Do I need to do this?
                         dirty = True
-                
-                specials = self.sram_abstraction.fields.SR_Specials
-                special_build = 0
-                for bit, idx in [[1,221], [2,222], [4,223], [8,224], [16,225], [32,226]]:
-                    if constants.id_base+idx in ctx.checked_locations:
-                        special_build |= bit
-                    else:
-                        if specials&bit != 0:
-                            ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
-                            dirty = True
-                if cleanslate:
-                    self.sram_abstraction.fields.SR_Specials = special_build
-                    #self.sram_abstraction.stage(basis, [special_build])
+                        self.sram_abstraction.fields.SR_Monitors[i-1] = MAGIC_BROKEN
 
                 # GH3, MZ3, SY3, LZ3, SL3, FZ
                 bosses = self.sram_abstraction.fields.SR_Bosses
-                boss_build = 0
+                prev_bosses = ctx.my_stored_data.get("bosses",0)
                 for bit, idx in [[1,211], [2,212], [4,213], [8,214], [16,215], [32,216]]:
-                    if constants.id_base+idx in ctx.checked_locations:
-                        boss_build |= bit
-                    else:
-                        if bosses&bit != 0:
-                            ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
-                            dirty = True
+                    if constants.id_base+idx not in ctx.checked_locations and bosses&bit != 0:
+                        ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
+                        dirty = True
                 if cleanslate:
-                    self.sram_abstraction.fields.SR_Bosses = boss_build
+                    bosses = prev_bosses|bosses
+                    self.sram_abstraction.fields.SR_Bosses = prev_bosses|bosses
                     #self.sram_abstraction.stage(basis+2, [boss_build])
+                if prev_bosses != bosses:
+                    ctx.my_stored_data["bosses"] = bosses
+                    await ctx.send_msgs([{"cmd": "Set", "key": f"{ctx.slot}_{ctx.team}_sonic1_bosses",
+                                          "default": 0, "want_reply": True,
+                                          "operations": [{"operation": "replace", "value": bosses}]}])
 
                 #logger.info(f"Data... {clean_data[basis:]=}")
                 #logger.info(f"Data... {ctx.items_received=}")
@@ -227,6 +226,7 @@ class S1Client(BizHawkClient):
                 invinc = 0
                 shield = 0
                 speeds = 0
+                has_fz_key = False
                 for it in ctx.items_received:
                     idx = it.item - constants.id_base
                     #logger.info(["Emerald 1", "Emerald 2", "Emerald 3", "Emerald 4", "Emerald 5", "Emerald 6", "Disable GOAL blocks", "Disable R blocks"][idx-1])
@@ -236,10 +236,12 @@ class S1Client(BizHawkClient):
                         buffs[0] = 1
                     elif idx == 8:
                         buffs[1] = 1
-                    elif idx in range(9,17):
+                    elif idx in range(9,15):
                         levelkeys |= [1,2,4,8,16,32,64,128][idx-9]
-                    elif idx in range(17,23):
-                        sskeys |= [1,2,4,8,16,32,64,128][idx-17]
+                    elif idx == 15:
+                      has_fz_key = True
+                    elif idx == 16:
+                        sskeys += 1
                     elif idx in [23,24]:
                         ringcount += 1
                     elif idx == 25:
@@ -254,6 +256,48 @@ class S1Client(BizHawkClient):
                     else:
                         logger.info(f"Received item {idx} and I don't know what it is.")
                 
+                levelkeys |= 128 # bit to enable special stages
+                sskeys = [0,1,3,7,15,31,63,127,255][sskeys]
+
+                specials = self.sram_abstraction.fields.SR_Specials
+                special_build = 0
+                for bit, idx in [[1,221], [2,222], [4,223], [8,224], [16,225], [32,226]]:
+                    if constants.id_base+idx in ctx.checked_locations:
+                        special_build |= bit
+                    else:
+                        if specials&bit != 0:
+                            ctx.locations_checked.add(constants.id_base+idx) # Do I need to do this?
+                            dirty = True
+                if cleanslate:
+                    self.sram_abstraction.fields.SR_Specials = special_build&sskeys
+                    #self.sram_abstraction.stage(basis, [special_build])
+
+
+                fzl = ctx.slot_data.get("final_zone_last",0)
+                show_fz_key: bool = (fzl == 0)
+
+                if ctx.finished_game:
+                  has_fz_key = True
+                  show_fz_key = True
+
+                finish_game = False
+                if not ctx.finished_game and (
+                        specials.bit_count()    >= ctx.slot_data.get("specials_goal",6) # Special stags goal from yaml
+                    and emeraldsset.bit_count() >= ctx.slot_data.get("emerald_goal", 6) # Emerald goal from yaml
+                    and ringcount               >= ctx.slot_data.get("ring_goal",  100) # Ring goal from yaml.
+                ):
+                    bg = ctx.slot_data.get("boss_goal",    6) # Boss goal from yaml
+                    if bosses.bit_count() >= bg and (fzl in [0,1] or (fzl == 2 and bosses & 32)):
+                        finish_game = True
+                        has_fz_key = True
+                        show_fz_key = True
+                        sskeys |= 64 # bit to show victory
+                    elif bosses.bit_count() >= bg - 1 and has_fz_key:
+                        show_fz_key = True
+
+                if show_fz_key:
+                    levelkeys |= 64 # bit for FZ
+
                 if ctx.slot_data.get("hard_mode", 0):
                     ringcount = 0
 
@@ -295,14 +339,13 @@ class S1Client(BizHawkClient):
                 if dirty:
                     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": list(ctx.locations_checked)}]) # Or this?
                     #logger.info(f"{ctx.locations_checked=}")
-                if not ctx.finished_game and (
-                        bosses == 0x3F # All bosses
-                    and specials == 0x3F # All specials
-                    and emeraldsset == 0x3F # All Emeralds received
-                    and ringcount >= ctx.slot_data.get("ring_goal",100) # Ring goal from config.
-                ):
+
+                if finish_game:
                     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
             else:
-                logger.info(f"{seed_name}/{slot_id} =?= {ctx.remote_seed_name}/{ctx.slot}")
+                seed_complaint = f"{seed_name}/{slot_id} =?= {ctx.remote_seed_name}/{ctx.slot}"
+                if ctx.complained_about_seed != seed_complaint:
+                    logger.info(seed_complaint)
+                    ctx.complained_about_seed = seed_complaint
             #logger.info(f"{ctx.username=}")
             

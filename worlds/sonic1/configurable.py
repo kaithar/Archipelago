@@ -10,7 +10,7 @@ from worlds.Files import APPatchExtension, APProcedurePatch
 from settings import get_settings
 import settings
 import Options
-from Options import DefaultOnToggle, NamedRange, OptionGroup, Toggle, Range, PerGameCommonOptions
+from Options import DefaultOnToggle, NamedRange, OptionGroup, Toggle, Range, Choice, PerGameCommonOptions
 
 from . import constants
 
@@ -105,12 +105,12 @@ class NoLocalKeys(Toggle):
 
 class AllowDisableGoal(DefaultOnToggle):
     """Enable the buff item that disables Special stage GOAL blocks."""
-    display_name = "Add a buff to disable GOAL blocks"
+    display_name = "Buff to disable GOAL blocks"
     default = True
   
 class AllowDisableR(DefaultOnToggle):
     """Enable the buff item that disables Special stage R blocks."""
-    display_name = "Add a buff to disable R blocks"
+    display_name = "Buff to disable R blocks"
     default = True
 
 class HardMode(Toggle):
@@ -120,7 +120,7 @@ class HardMode(Toggle):
 
 class RingGoal(NamedRange):
     """Changes the number of rings that need to be found for you to clear.  Isn't affected by Hard Mode, is overriden by Available Rings."""
-    display_name = "Ring Goal for your Victory Condition"
+    display_name = "Ring Goal for your Victory"
     range_start = 0
     range_end = 150
     default = 100
@@ -129,6 +129,49 @@ class RingGoal(NamedRange):
         "normal": 100,
         "hard": 150
     }
+
+class BossGoal(NamedRange):
+    """Changes the number of bosses that need to be beaten for you to clear.  Not order specific."""
+    display_name = "Boss Goal for your Victory"
+    range_start = 0
+    range_end = 6
+    default = 6
+
+class SpecialsGoal(NamedRange):
+    """Changes the number of Special Stages that need to be beaten for you to clear.  Order specific."""
+    display_name = "Special Stages for your Victory"
+    range_start = 0
+    range_end = 6
+    default = 6
+
+class EmeraldGoal(NamedRange):
+    """Changes the number of emeralds that need to be collected for you to clear.  Not order specific."""
+    display_name = "Emerald Goal for your Victory"
+    range_start = 0
+    range_end = 6
+    default = 6
+
+class FinalZoneLast(Choice):
+    """Control when Final Zone can unlock, wait until all other victory conditions are met?
+
+    - **Anytime:** You can do Final Zone as soon as you have the key.
+    - **Last But Optional:** If your victory conditions can be achieved without beating Final Zone you skip it.
+    - **Always Last:** Final Zone unlocks once you have every other victory condition, beat it to win.
+
+    Note that this may change how certain mechanics behave:
+
+    - "Always Last" essentially forces the boss goal to be at least 1, "Last But Optional" will not.
+    - Both "Always Last" and "Last But Optional" will add the Final Zone key to your starting inventory.
+    - "Always Last" and "Last But Optional" are identical with 6 bosses.
+    - An example of less than 6: "Always Last" with 3 bosses will require any 2 of the Act 3 bosses then FZ, "Last But Optional" requires any 2 of the Act 3 bosses then either FZ or a third Act 3 boss.
+
+    """
+    display_name = "Final Zone unlocks when?"
+    rich_text_doc = True
+    option_anytime = 0
+    option_last_but_optional = 1
+    option_always_last = 2
+    default = 0
 
 class AvailableRings(Range):
     """Dr Eggman attacked, how many rings fell into the pool for you to recover?  Will cap Ring Goal."""
@@ -178,8 +221,9 @@ class PowSpeedShoes(Range):
     range_end = 16
     default = 5
 
-ring_options = OptionGroup("Ring Options",[AvailableRings,RingGoal,HardMode,BoringFiller])
+ring_options = OptionGroup("Ring Options",[AvailableRings,HardMode,BoringFiller])
 pow_options = OptionGroup("Power-up options", [PowInvinc, PowShield, PowSpeedShoes, SpeedyTrap])
+victory_conditions = OptionGroup("Victory conditions", [EmeraldGoal, BossGoal, SpecialsGoal, RingGoal, FinalZoneLast])
 
 valid_item_keys = [item[0] for item in constants.items if item[2] != "filler"]
 
@@ -228,5 +272,9 @@ class Sonic1GameOptions(PerGameCommonOptions):
     pow_ss_trap_flag: SpeedyTrap
     send_death: SendDeathLink
     recv_death: RecvDeathLink
+    boss_goal: BossGoal
+    emerald_goal: EmeraldGoal
+    specials_goal: SpecialsGoal
+    final_zone_last: FinalZoneLast
 
 

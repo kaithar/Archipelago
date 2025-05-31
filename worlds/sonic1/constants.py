@@ -1,6 +1,9 @@
 from collections import namedtuple
 from typing import Dict, List
-from . import sram
+try:
+  from . import sram
+except ImportError:
+  import sram
 
 id_base = 3141501000
 
@@ -282,6 +285,8 @@ for z in play_order[:6]: # My monitor counts are in play order but I only want t
             monitor_by_idx[m.idx] = m
             location_name_to_id[m.name] = m.id
 
+monitor_names: set[str] = set(monitor_by_name.keys())
+
 bosses = [
     ["Green Hill 3",  1, 211],
     ["Marble Zone 3", 2, 212],
@@ -302,6 +307,8 @@ for b in bosses:
     boss_by_idx[_b.idx] = _b
     boss_by_name[_b.name] = _b
     location_name_to_id[_b.name] = _b.id
+
+boss_names: set[str] = set(boss_by_name.keys())
 
 specials = [
     ["Special Stage 1", 1, 221],
@@ -325,6 +332,8 @@ for b in specials:
     special_by_name[_b.name] = _b
     location_name_to_id[_b.name] = _b.id
 
+special_names: set[str] = set(special_by_name.keys())
+
 emeralds = ["Blue Emerald (#1)", "Yellow Emerald (#2)", "Pink Emerald (#3)", 
             "Green Emerald (#4)", "Red Emerald (#5)", "Grey Emerald (#6)"]
 
@@ -342,17 +351,12 @@ core_items: list[list[str,int,str]] = [
     ["Labyrinth Key",      12, "progression"],
     ["Starlight Key",      13, "progression"],
     ["Scrap Brain Key",    14, "progression"],
-    ["Final Zone Key",     15, "progression"],
-    ["Special Stages Key", 16, "progression"], # Dummy key
-    ["Special Stage 1 Key",17, "progression"],
-    ["Special Stage 2 Key",18, "progression"],
-    ["Special Stage 3 Key",19, "progression"],
-    ["Special Stage 4 Key",20, "progression"],
-    ["Special Stage 5 Key",21, "progression"],
-    ["Special Stage 6 Key",22, "progression"]
+    ["Final Zone Key",     15, "progression"]
 ]
 
 items.extend(core_items)
+sskey = ["Special Stage Key", 16, "progression"]
+items.append(sskey)
 goal_item = ["Disable GOAL blocks", 7, "useful"]
 r_item = ["Disable R blocks",    8, "useful"]
 items.extend([goal_item,r_item])
@@ -401,7 +405,15 @@ items.append(boring_filler)
 item_name_groups: Dict[str,set[str]] = {
     "keys": {item[0] for item in items if "Key" in item[0]},
     "rings": {"Shiny Ring", "Gold Ring"},
-    "junk": {item[0] for item in silly_filler+[boring_filler]}
+    "junk": {item[0] for item in silly_filler+[boring_filler]},
+    "emeralds": set(emeralds),
+    "powerups": set(power_up_names)
+}
+
+location_name_groups: Dict[str,set[str]] = {
+    "monitors": monitor_names,
+    "bosses": boss_names,
+    "specials": special_names
 }
 
 _item = namedtuple('Item', ['name', 'idx','id','itemclass'])
