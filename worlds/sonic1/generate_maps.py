@@ -1,3 +1,6 @@
+import sys
+sys.path.append("../..")
+
 import json
 import typing
 import constants
@@ -7,7 +10,7 @@ locations = []
 items = []
 location_lua = ["LOCATION_MAPPING = {\n"]
 item_lua = ["ITEM_MAPPING = {\n"]
-map_match_lua = ["AREA_MAPPING= {\n",'  [0] = {"menu", nil},\n']
+map_match_lua = ["AREA_MAPPING= {\n",'  [0] = {"Menu", nil},\n']
 map_match_count = 1
 
 maps.append({"name": "menu", "location_size": 22, "location_border_thickness": 1, "img": "images/menu.png"})
@@ -24,7 +27,8 @@ for z in [iz for iz in sorted(constants.zones_base[:6], key=lambda iz: iz.played
                 "chest_unopened_img": "images/monitor_o.png","chest_opened_img": "images/monitor_x.png",
                 "children": []
         }
-        map_match_lua += f'  [{map_match_count}] = {{"{z.long} Zone", "Act {stage}"}},\n'
+        zl = z.long.replace(" Zone", "")
+        map_match_lua += f'  [{map_match_count}] = {{"{zl} Zone", "Act {stage}"}},\n'
         map_match_count += 1
         for m in constants.monitor_by_zone[zone]:
             loco["children"].append({
@@ -40,8 +44,19 @@ for z in [iz for iz in sorted(constants.zones_base[:6], key=lambda iz: iz.played
         locations.append(loco)
         line += 24
 
+countable= {
+  "Special Stage Key": "consumable",
+  "Shiny Ring": "consumable",
+  "Gold Ring": "consumable",
+  "Invincibility": "consumable",
+  "Shield": "consumable",
+  "Great Speed Shoes": "consumable",
+  "Scary Speed Shoes": "consumable",
+  "Space intentionally left blank (Junk)": "consumable"
+}
+
 for i in constants.item_by_id.values():
-    item_lua += f'  [{i.id}] = {{"{i.name.replace(" ","").lower()}", "toggle"}},\n'
+    item_lua += f'  [{i.id}] = {{"{i.name.replace(" ","").lower()}", "{countable.get(i.name,"toggle")}"}},\n'
     iname = typing.cast(str,i.name)
     iname.endswith
     if i.name.startswith("Ring"):
@@ -53,7 +68,7 @@ for i in constants.item_by_id.values():
 
     items.append({
         "name": i.name,
-        "type": "toggle",
+        "type": countable.get(i.name,"toggle"),
         "img": proposed_img,
         "img_mods": "",
         "codes": f'{i.name.replace(" ","").lower()},{i.name}'
@@ -71,24 +86,24 @@ locations.append({"name": "Bosses", "children": [
   {"name": "Starlight 3 Boss",   "map_locations": [{"map": "menu", "x": 420, "y": 540}],
      "sections": [{"name": "Starlight 3 Boss", "access_rules":["Starlight Key"]}]},
   {"name": "Final Zone Boss",    "map_locations": [{"map": "menu", "x": 444, "y": 540}],
-     "sections": [{"name": "Final Zone Boss", "access_rules":["Final Zone Key"]}]},
+     "sections": [{"name": "Final Zone Boss", "access_rules":["$fzOpenCheck"]}]},
 ]})
 
 for b in constants.boss_by_idx.values():
   location_lua.append(f'  [{b.id}] = {{"{b.name}"}},\n')
 
 locations.extend([
-  {"name": "Special Stage 1", "access_rules":["Special Stage 1 Key"], 
+  {"name": "Special Stage 1", "access_rules":["$ssKeyCheck|1"], 
     "map_locations": [{"map": "menu", "x": 372, "y": 468}],"sections": [{"name": "Special Stage 1"}]},
-  {"name": "Special Stage 2", "parent": "Special Stage 1", "access_rules":["Special Stage 2 Key"],
+  {"name": "Special Stage 2", "access_rules":["$ssKeyCheck|2"],
     "map_locations": [{"map": "menu", "x": 420, "y": 468}],"sections": [{"name": "Special Stage 2"}]},
-  {"name": "Special Stage 3", "parent": "Special Stage 2", "access_rules":["Special Stage 3 Key"],
+  {"name": "Special Stage 3", "access_rules":["$ssKeyCheck|3"],
     "map_locations": [{"map": "menu", "x": 468, "y": 468}],"sections": [{"name": "Special Stage 3"}]},
-  {"name": "Special Stage 4", "parent": "Special Stage 3", "access_rules":["Special Stage 4 Key"],
+  {"name": "Special Stage 4", "access_rules":["$ssKeyCheck|4"],
     "map_locations": [{"map": "menu", "x": 516, "y": 468}],"sections": [{"name": "Special Stage 4"}]},
-  {"name": "Special Stage 5", "parent": "Special Stage 4", "access_rules":["Special Stage 5 Key"],
+  {"name": "Special Stage 5", "access_rules":["$ssKeyCheck|5"],
     "map_locations": [{"map": "menu", "x": 564, "y": 468}],"sections": [{"name": "Special Stage 5"}]},
-  {"name": "Special Stage 6", "parent": "Special Stage 5", "access_rules":["Special Stage 6 Key"],
+  {"name": "Special Stage 6", "access_rules":["$ssKeyCheck|6"],
     "map_locations": [{"map": "menu", "x": 612, "y": 468}],"sections": [{"name": "Special Stage 6"}]}
 ])
 
