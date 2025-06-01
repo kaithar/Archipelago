@@ -21,7 +21,7 @@ class S1Client(BizHawkClient):
     async def validate_rom(self, ctx):
         # loaded_hash = await get_hash(ctx.bizhawk_ctx)
         print(ctx.rom_hash)
-        if ctx.rom_hash == "E74E98703EB01FAE49C9FB675C80480C18EB6FFB": # Patched against known `Sonic The Hedgehog (W) (REV00)`
+        if ctx.rom_hash == "EE5D0A76A515111B589B2E523B3AC685C20E37AB": # Patched against known `Sonic The Hedgehog (W) (REV00)`
             ctx.game = self.game
             ctx.items_handling = 0b111
             ctx.finished_game = False
