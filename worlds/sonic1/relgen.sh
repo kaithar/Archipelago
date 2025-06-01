@@ -1,6 +1,7 @@
 #! /bin/sh
 
+rm -v sonic1.poptracker.zip sonic1.apworld
 cd tracker
 zip ../sonic1.poptracker.zip -r * -x images/raw/\*
 cd ../..
-zip sonic1/sonic1.apworld -r sonic1 -x \*/__pycache__/\* sonic1/archived/\* sonic1/tracker/images/raw/\* sonic1/sonic1.apworld sonic1/sonic1.poptracker.zip sonic1/relgen.sh sonic1/.gitignore
+zip sonic1/sonic1.apworld -r sonic1 -x \*/__pycache__/\* sonic1/archived/\* sonic1/tracker/images/raw/\* sonic1/sonic1.apworld sonic1/sonic1.poptracker.zip sonic1/relgen.sh sonic1/.gitignore sonic1/sonic1
