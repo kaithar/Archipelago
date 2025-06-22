@@ -108,6 +108,11 @@ function onClear(slot_data)
         if item_obj then
           if item_obj.Type == "toggle" then
               item_obj.Active = false
+          elseif item_obj.Type == "progressive" then
+              item_obj.CurrentStage = 0
+              item_obj.Active = false
+          elseif item_obj.Type == "consumable" then
+              item_obj.AcquiredCount = 0
           end
         end
     end
