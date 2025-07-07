@@ -38,6 +38,7 @@ class Sonic1World(World):
 
     options_dataclass = configurable.Sonic1GameOptions
     options: configurable.Sonic1GameOptions
+    explicit_indirect_conditions = False
 
     tracker_world = {
         "map_page_folder": "tracker",
