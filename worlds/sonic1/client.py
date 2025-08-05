@@ -115,6 +115,7 @@ class S1Client(BizHawkClient):
             s = ctx.messages.pop(0)
             await display_message(ctx.bizhawk_ctx, s)
 
+        map_code = ctx.curr_map
         if self.sram_abstraction.extra_data[0] == b"\x0C": # Level mode
             # This fixes the oddity of the game switching to GHZ1 for special stage conclusion:
             if ctx.curr_map not in range(19,25):
@@ -123,7 +124,8 @@ class S1Client(BizHawkClient):
                 map_code = ctx.curr_map
         elif self.sram_abstraction.extra_data[0] == b"\x10": # Special zone
             map_code = int(self.sram_abstraction.extra_data[1][6])+19
-        else:
+        elif self.sram_abstraction.extra_data[0] == b"\x04": # Title
+            # Really we should only go back to the menu when we go back to the menu.  So, look for Title game mode.
             map_code = 0
         
         if ctx.curr_map != map_code:
