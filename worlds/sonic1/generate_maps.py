@@ -15,6 +15,8 @@ map_match_count = 1
 
 maps.append({"name": "menu", "location_size": 22, "location_border_thickness": 1, "img": "images/menu.png"})
 
+special_access_rules = {3141501057: '^$mzSequenceBreakCheck'}
+
 line = 12
 for z in [iz for iz in sorted(constants.zones_base[:6], key=lambda iz: iz.playedin)]:
     for stage in range(1,4): # 3 stages for each
@@ -23,22 +25,27 @@ for z in [iz for iz in sorted(constants.zones_base[:6], key=lambda iz: iz.played
         maps.append({
             "name": zone, "location_size": 12, "location_border_thickness": 1, "img": f"images/{zone.upper()}.png"
         })
-        loco = {"name": zone, "access_rules": [f"{z.long} Key"], 
-                "chest_unopened_img": "images/monitor_o.png","chest_opened_img": "images/monitor_x.png",
-                "children": []
+        loco = {
+            "name": zone,
+            "chest_unopened_img": "images/monitor_o.png","chest_opened_img": "images/monitor_x.png",
+            "children": []
         }
         zl = z.long.replace(" Zone", "")
         map_match_lua += f'  [{map_match_count}] = {{"{zl} Zone", "Act {stage}"}},\n'
         map_match_count += 1
         for m in constants.monitor_by_zone[zone]:
-            loco["children"].append({
+            c = {
                 "name": m.name, 
                 "map_locations": [
                     {"map": zone, "x": m.x//constants.map_data[zone]["scale"], "y": m.y//constants.map_data[zone]["scale"]},
                     {"map": "menu", "x": col, "y": line},
                 ],
+                "access_rules": [f"{z.long} Key"],
                 "sections": [{"name": m.name}]
-            })
+            }
+            if m.id in special_access_rules:
+              c["access_rules"] = [special_access_rules[m.id]]
+            loco["children"].append(c)
             col += 24
             location_lua.append(f'  [{m.id}] = {{"{m.name}"}},\n')
         locations.append(loco)

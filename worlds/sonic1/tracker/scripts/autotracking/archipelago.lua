@@ -63,7 +63,7 @@ end
 function onClearHandler(slot_data)
     local clear_timer = os.clock()
     
-    ScriptHost:RemoveWatchForCode("StateChange")
+    --ScriptHost:RemoveWatchForCode("StateChange")
     -- Disable tracker updates.
     Tracker.BulkUpdate = true
     -- Use a protected call so that tracker updates always get enabled again, even if an error occurred.
@@ -74,7 +74,7 @@ function onClearHandler(slot_data)
         -- locations from AP have been processed.
         local handlerName = "AP onClearHandler"
         local function frameCallback()
-            ScriptHost:AddWatchForCode("StateChange", "*", StateChange)
+            --ScriptHost:AddWatchForCode("StateChange", "*", StateChange)
             ScriptHost:RemoveOnFrameHandler(handlerName)
             Tracker.BulkUpdate = false
             forceUpdate()
@@ -205,6 +205,16 @@ function fzOpenCheck()
     return false
 end
 
+function mzSequenceBreakCheck()
+  local mzk = Tracker:FindObjectForCode("Marble Zone Key")
+  if mzk and mzk.Active == true then
+    return AccessibilityLevel.Normal
+  elseif fzOpenCheck() then
+    return AccessibilityLevel.SequenceBreak
+  end
+  return AccessibilityLevel.None
+end
+
 --called when a location gets cleared
 function onLocation(location_id, location_name)
     local location_array = LOCATION_MAPPING[location_id]
@@ -281,7 +291,7 @@ function onNotify(key, value, old_value)
             end
         end
     end ]]
-    if key == AREA_KEY then
+    if key == AREA_KEY and AREA_MAPPING[value] then
       Tracker:UiHint("ActivateTab", AREA_MAPPING[value][1])
       if AREA_MAPPING[value][2] then
           Tracker:UiHint("ActivateTab", AREA_MAPPING[value][2])
@@ -311,7 +321,7 @@ function onNotifyLaunch(key, value)
             end
         end
     end ]]
-    if key == AREA_KEY then
+    if key == AREA_KEY and AREA_MAPPING[value] then
       Tracker:UiHint("ActivateTab", AREA_MAPPING[value][1])
       if AREA_MAPPING[value][2] then
           Tracker:UiHint("ActivateTab", AREA_MAPPING[value][2])
