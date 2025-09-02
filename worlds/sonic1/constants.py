@@ -530,4 +530,4 @@ class S1Layout(sram.BigEndian):
     SR_DeathL_out: int = sram.ParseField('B')          # ds.w 1
     SR_Deaths: int     = sram.ParseField('B')          # ds.w 1
     SR_Seed: bytes     = sram.ParseField('20s')        # 20 byte string, ds.w $20
-    SR_Slot: int       = sram.ParseField('B')          # ds.w 1
+    SR_Slot: int       = sram.ParseField('H')          # ds.w 2
